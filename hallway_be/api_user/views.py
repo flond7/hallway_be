@@ -399,6 +399,9 @@ def sdi(request):
 
 # BE SIMPLE API
 def user_list(request):
+    """ userList = customUser.objects.all().order_by('name')
+    serializer = UserListSerializer(userList, many=True)
+    return JsonResponse(serializer.data, safe=False) """
     userList = customUser.objects.all().order_by('name')
     userList = serializers.serialize('json', userList)
     return JsonResponse(userList, safe=False)
