@@ -9,6 +9,7 @@ from django.template import loader
 from django.urls import reverse
 from django.shortcuts import render
 from django.core.exceptions import ValidationError
+from django.core import serializers
 
 # USER ASK
 from django.contrib.auth import get_user_model
@@ -399,4 +400,5 @@ def sdi(request):
 # BE SIMPLE API
 def user_list(request):
     userList = customUser.objects.all().order_by('name')
-    return JsonResponse(userList.json())
+    userList = serializers.serialize('json', userList)
+    return JsonResponse(userList, safe=False)
