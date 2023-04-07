@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required, permission_required
+
+# REST FRAMEWORK
+from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from django import template
@@ -29,6 +32,7 @@ from .modelsConstants import *
 from .models import customUser, askUser
 from .forms import customUserForm, askUserForm
 from .filters import customUserFilter
+from .serializers import UserListSerializer
 
 
 generic_context = {
@@ -398,10 +402,11 @@ def sdi(request):
 
 
 # BE SIMPLE API
+@api_view(['GET'])
 def user_list(request):
-    """ userList = customUser.objects.all().order_by('name')
-    serializer = UserListSerializer(userList, many=True)
-    return JsonResponse(serializer.data, safe=False) """
     userList = customUser.objects.all().order_by('name')
+    serializer = UserListSerializer(userList, many=True)
+    return Response(serializer.data)
+    """ userList = customUser.objects.all().order_by('name')
     userList = serializers.serialize('json', userList)
-    return JsonResponse(userList, safe=False)
+    return JsonResponse(userList, safe=False) """
