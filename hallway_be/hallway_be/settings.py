@@ -85,13 +85,15 @@ WSGI_APPLICATION = 'hallway_be.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mydb',
-        'USER': 'root',
-        'PASSWORD': 'admin',
-        'HOST':'localhost',
-        'PORT':'3306',
+        'NAME': env('MYSQL_NAME'),
+        'USER': env('MYSQL_USER'),
+        'PASSWORD': env('MYSQL_PASSWORD'),
+        'HOST':env('MYSQL_HOST'),
+        'PORT':env('MYSQL_PORT'),
     }
 }
+
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 
 """ DATABASES = {
     'default': {
