@@ -20,5 +20,6 @@ urlpatterns = [
 
   # BE API
   path('user_list', views.user_list, name="user_list"),
+  path('office_list', views.office_list, name="office_list"),
   
  ] 

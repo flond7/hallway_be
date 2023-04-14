@@ -407,6 +407,7 @@ def user_list(request):
     userList = customUser.objects.all().order_by('name')
     serializer = UserListSerializer(userList, many=True)
     return Response(serializer.data)
-    """ userList = customUser.objects.all().order_by('name')
-    userList = serializers.serialize('json', userList)
-    return JsonResponse(userList, safe=False) """
+
+@api_view(['GET'])
+def office_list(request):
+    return Response(MAIN_OFFICE_CHOICES)
