@@ -1,5 +1,10 @@
 from django.shortcuts import render
 
+# MY VARS
+#from .constants import MY_CONST
+#from .modelsConstants import *
+from .models import accessoAtti
+
 # Create your views here.
 def access_create(request):
     return True
@@ -13,3 +18,7 @@ def access_create(request):
             cu.save()
             return HttpResponseRedirect('user_profile/'+cu.id)           
     return render(request, 'user_create.html', generic_context) """
+
+def access_list_all(request):
+    accessList = accessoAtti.objects.all()
+    return accessList
