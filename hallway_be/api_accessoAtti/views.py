@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 # MY VARS
 #from .constants import MY_CONST
@@ -17,5 +18,7 @@ def access_create(request):
     return False
 
 def access_list_all(request):
-    accessList = accessoAtti.objects.all()
-    return accessList
+    if request.method == "GET":
+        accessList = accessoAtti.objects.all()
+        return accessList          
+    

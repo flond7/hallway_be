@@ -19,5 +19,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api_user/', include('api_user.urls')),
+    path('api_accessoAtti/', include('api_accessoAtti.urls')),
     path("accounts/", include("django.contrib.auth.urls")),  # to use django.auth and implement login page
 ]
