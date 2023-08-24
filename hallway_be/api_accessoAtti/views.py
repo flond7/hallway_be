@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 # MY VARS
@@ -19,6 +20,8 @@ def access_create(request):
 
 def access_list_all(request):
     if request.method == "GET":
-        accessList = accessoAtti.objects.all()
-        return accessList          
+        accessList = list(accessoAtti.objects.all())
+        #serialize it so the JSON can be returned
+        accessList = serializers.serialize('json', accessList)
+        return JsonResponse({"data": accessList}, safe=False)          
     
