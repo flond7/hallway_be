@@ -168,3 +168,7 @@ RECIPIENT_ADDRESS = env('RECIPIENT_ADDRESS')
 # CORS
 CORS_ALLOWED_ORIGINS = ['http://localhost:4200']
 CORS_ALLOW_ALL_ORIGINS = False
+CORS_ORIGIN_WHITELIST = ('http://localhost:4200',)
+
+CSRF_TRUSTED_ORIGINS = 'http://localhost:4200',
+ALLOWED_HOSTS = ['localhost',],
