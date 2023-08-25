@@ -166,9 +166,19 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 RECIPIENT_ADDRESS = env('RECIPIENT_ADDRESS')
 
 # CORS
-CORS_ALLOWED_ORIGINS = ['http://localhost:4200']
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:4200',
+    ]
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ORIGIN_WHITELIST = ('http://localhost:4200',)
-
+CORS_ORIGIN_WHITELIST = ('http://localhost:4200', '172.20.34.81')
+""" CORS_ALLOWED_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    ] """
+CORS_ALLOW_HEADERS = ["Access-Control-Allow-Origin",]
 """ CSRF_TRUSTED_ORIGINS = 'http://localhost:4200',
 ALLOWED_HOSTS = ['localhost',], """

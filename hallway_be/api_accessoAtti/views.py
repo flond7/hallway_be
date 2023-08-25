@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
+#CORS
+from django.views.decorators.csrf import csrf_exempt
+
 # MY VARS
 #from .constants import MY_CONST
 #from .modelsConstants import *
@@ -10,6 +13,7 @@ from .forms import accessoAttiForm
 #from .serializers import UserListSerializer
 
 # Create your views here.
+@csrf_exempt
 def access_create(request):
     if request.method == "POST":
         cu = accessoAttiForm(request.POST)
