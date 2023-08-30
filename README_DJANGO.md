@@ -450,6 +450,12 @@ https://guide.debianizzati.org/index.php/Apache_e_Virtual_Hosts:_configurare_Apa
 
 
 ## EMAIL da django
+- create a .env file at the level of settings.py hallway_be > hallway_be with the data without '', no strings
+  EMAIL_HOST=posta.um.fvg.it
+  EMAIL_HOST_USER=***********
+  EMAIL_HOST_PASSWORD=***********
+  RECIPIENT_ADDRESS=informatica@comune.aviano.pn.it
+
 - https://www.sitepoint.com/django-send-email/
 
 
