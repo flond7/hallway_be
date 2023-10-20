@@ -15,11 +15,18 @@ import os
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+#OLD BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # to handle environamental variables
-env = environ.Env()
-environ.Env.read_env()
+#OLD env = environ.Env() #OLD
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+#OLD environ.Env.read_env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,7 +36,8 @@ environ.Env.read_env()
 SECRET_KEY = 'django-insecure-c6!)jgz8w3et!tlnhab^&lbcm__e04zj=#x72yr$1$##!g(9$t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 ALLOWED_HOSTS = []
 
@@ -89,14 +97,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': env('DATABASE_NAME'),
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASSWORD'),
-        'HOST':env('DATABASE_HOST'),
-        'PORT':env('DATABASE_PORT'),
+        'USER': 'hallway_root',
+        'PASSWORD': 'Avn347%',
+        'HOST':'localhost',
+        'PORT':''
+
     }
 }
 
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+""" EMAIL_HOST_USER = env('EMAIL_HOST_USER') """
 
 """ DATABASES = {
     'default': {
@@ -156,14 +165,14 @@ REST_FRAMEWORK = {
 # EMAIL
 # variables can be found in the .env file at the same level of settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = env('EMAIL_HOST')
+""" EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD') """
 
 # Custom setting. To email
-RECIPIENT_ADDRESS = env('RECIPIENT_ADDRESS')
+""" RECIPIENT_ADDRESS = env('RECIPIENT_ADDRESS') """
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
