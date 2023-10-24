@@ -190,3 +190,19 @@ CORS_ORIGIN_WHITELIST = ('http://localhost:4200', '172.20.34.81')
 CORS_ALLOW_HEADERS = ["Access-Control-Allow-Origin", "content-type", "cache-control"]
 """ CSRF_TRUSTED_ORIGINS = 'http://localhost:4200',
 ALLOWED_HOSTS = ['localhost',], """
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',  # Adjust the level as needed
+            'class': 'logging.FileHandler',
+            'filename': 'api_requests.log',  # Log file name
+        },
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'DEBUG',  # Adjust the level as needed
+    },
+}
