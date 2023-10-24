@@ -44,3 +44,9 @@ DJANGO ERRORS
 *** WITH CSS NOT LOADING ***
 - https://learndjango.com/tutorials/django-static-files
 - https://docs.djangoproject.com/en/4.0/howto/static-files/
+
+*** GIT NOT PUSHING ***
+- chek if the proxy is setted with 
+  git config --list
+- if it's not setted to id 
+  git config --global http.proxy http://proxyuser:proxypwd@proxy.server.com:8080

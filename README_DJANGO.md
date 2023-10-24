@@ -447,7 +447,8 @@ https://guide.debianizzati.org/index.php/Apache_e_Virtual_Hosts:_configurare_Apa
 
 
 
-
+## .ENV file
+- has to be created at the same level of settings.py
 
 ## EMAIL da django
 - create a .env file at the level of settings.py hallway_be > hallway_be with the data without '', no strings
