@@ -15,18 +15,17 @@ import os
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-#OLD BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
+#NEW BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # to handle environamental variables
-#OLD env = environ.Env() #OLD
-env = environ.Env(
+env = environ.Env() #OLD
+""" env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
-)
-#OLD environ.Env.read_env()
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+) """
+#NEW  environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -36,7 +35,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = 'django-insecure-c6!)jgz8w3et!tlnhab^&lbcm__e04zj=#x72yr$1$##!g(9$t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 ALLOWED_HOSTS = []
@@ -96,7 +95,7 @@ WSGI_APPLICATION = 'hallway_be.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': env('DATABASE_NAME'),
+        'NAME': 'hallway_db',
         'USER': 'hallway_root',
         'PASSWORD': 'Avn347%',
         'HOST':'localhost',
