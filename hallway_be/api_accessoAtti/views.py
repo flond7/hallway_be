@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 #from .modelsConstants import *
 from .models import accessoAtti
 from .forms import accessoAttiForm
-#from .serializers import UserListSerializer
+from .serializers import accessoAttiSerializer
 
 
 
@@ -58,11 +58,11 @@ def access_create(request):
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
     return JsonResponse({"error": "Invalid request"}, status=400)
 
-
 def access_list_all(request):
     if request.method == "GET":
-        accessList = list(accessoAtti.objects.all())
-        #serialize it so the JSON can be returned
-        accessList = serializers.serialize('json', accessList)
-        return JsonResponse({"data": accessList}, safe=False)          
-    
+        # retrieve all the data in the form of a ueryset
+        accessList = accessoAtti.objects.all()
+        # transform the queryset in a data type that can be rendered as json trough a serializer
+        serializer = accessoAttiSerializer(accessList, many=True)
+        # transform the serialized data in a json and send them
+        return JsonResponse({"data": serializer.data}, safe=False)
