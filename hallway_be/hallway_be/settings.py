@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
+    'common',
     'api_user',
     'api_peg',
     'api_accessoAtti',
@@ -158,7 +160,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # REST FRAMEWORK settings
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+}
+
+# Configure JWT settings (modify as needed)
+JWT_AUTH = {
+    'JWT_SECRET_KEY': 'your-secret-key',
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_ALLOW_REFRESH': True,
 }
 
 # EMAIL
@@ -187,7 +199,7 @@ CORS_ORIGIN_WHITELIST = ('http://localhost:4200', '172.20.34.81')
     'POST',
     'PUT',
     ] """
-CORS_ALLOW_HEADERS = ["Access-Control-Allow-Origin", "content-type", "cache-control"]
+CORS_ALLOW_HEADERS = ["Access-Control-Allow-Origin", "content-type", "cache-control", 'Authorization', 'Skip-Interceptor']
 """ CSRF_TRUSTED_ORIGINS = 'http://localhost:4200',
 ALLOWED_HOSTS = ['localhost',], """
 
@@ -205,4 +217,15 @@ LOGGING = {
         'handlers': ['file'],
         'level': 'DEBUG',  # Adjust the level as needed
     },
+}
+
+
+REST_FRAMEWORK = {
+   'DEFAULT_PERMISSION_CLASSES': [
+       'rest_framework.permissions.IsAuthenticated',
+   ],
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework.authentication.SessionAuthentication',
+       'rest_framework.authentication.TokenAuthentication',
+   )
 }
