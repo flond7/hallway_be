@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from rest_framework.response import Response
 import json
 
 # CORS
@@ -52,7 +53,7 @@ def access_create(request):
             aa = accessoAttiForm(data)
             if aa.is_valid():
                 aa.save()
-                return JsonResponse({"data": "Record saved correctly"}, safe=False)
+                return JsonResponse({"data": "Record saved correctly", 'status': 200}, status=200)
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
@@ -66,3 +67,18 @@ def access_list_all(request):
         serializer = accessoAttiSerializer(accessList, many=True)
         # transform the serialized data in a json and send them
         return JsonResponse({"data": serializer.data}, safe=False)
+
+@csrf_exempt
+def access_delete(request, pk):
+    try:
+        record = accessoAtti.objects.get(pk=pk)
+    except accessoAtti.DoesNotExist:
+        data = {'data': 'Questo accesso non è registrato sul database', 'status': 404}
+        return JsonResponse(data, status=404)
+        #return Response(status=status.HTTP_404_NOT_FOUND)
+    record.delete()
+    #return Response(status=status.HTTP_204_NO_CONTENT)
+    data = {'data': 'I dati sono stati cancellati correttamente', 'status': 201}
+    return JsonResponse(data, status=201)
+
+
