@@ -80,3 +80,5 @@ def access_delete(request, pk):
     #return Response(status=status.HTTP_204_NO_CONTENT)
     data = {'data': 'I dati sono stati cancellati correttamente', 'status': 201}
     return JsonResponse(data, status=201)
+
+

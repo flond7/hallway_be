@@ -187,21 +187,20 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD') """
 
 # CORS
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',
-    ]
-CORS_ORIGIN_WHITELIST = ('http://localhost:4200', '172.20.34.81')
-""" CORS_ALLOWED_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-    ] """
-CORS_ALLOW_HEADERS = ["Access-Control-Allow-Origin", "content-type", "cache-control", 'Authorization', 'Skip-Interceptor']
-""" CSRF_TRUSTED_ORIGINS = 'http://localhost:4200',
-ALLOWED_HOSTS = ['localhost',], """
+CORS_ALLOWED_ORIGINS = ['http://localhost:4200',]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = ('http://localhost:4200',)
+CORS_ALLOW_HEADERS = ["Access-Control-Allow-Origin", "content-type", "cache-control", 'Authorization', 'X-CSRFToken']
+CORS_ALLOWED_METHODS = ['DELETE','GET','OPTIONS','PATCH','POST','PUT',]
+
+#CSRF SETTINGS
+CSRF_TRUSTED_ORIGINS = ['http://localhost:4200']
+CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"               #It's the header capitalized, with - turned to _ and with HTTP_ before
+
+
+
+
+"""ALLOWED_HOSTS = ['localhost',], """
 
 LOGGING = {
     'version': 1,
