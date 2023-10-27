@@ -3,12 +3,15 @@ from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
+from django.forms.models import model_to_dict
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import json
 
-from .serializers import UserLoginSerializer
+from .models import UserProfile
+from .serializers import UserLoginSerializer, UserProfileSerializer
 
 import logging
 from django.http import HttpResponse
@@ -27,23 +30,30 @@ def user_log(request):
         data = json.loads(request.body.decode('utf-8'))
         serializer = UserLoginSerializer(data=data)
         if serializer.is_valid():
-            logger.info('valid serial')
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
             user = authenticate(username=username, password=password)
             if user is not None:
-                logger.info(f'Before login: User {user.username} ({user.id}) is being logged in.')
                 login(request, user)
-                logger.info(f'After login: User {user.username} ({user.id}) has been logged in successfully.')
-        
-                logger.info(login)
                 data = {'data': 'Login effettuato', 'status': 201}
                 return JsonResponse(data, status=201)
             else:
-                logger.info('user is none')
                 data = {'data': 'Utente non autorizzato', 'status': 401}
                 return JsonResponse(data, status=401)
         else:
             logger.error(serializer.errors)  
             data = {'data': 'Problema con il serializer che risulta invalido', 'status': 201}
             return JsonResponse(data, status=400)
+
+def get_user_profiles_auth(request, pk):
+    if request.method == "GET":
+        try:
+            auth = UserProfile.objects.get(pk=pk)
+            # Convert the UserProfile object to a dictionary so the serializer can use it
+            auto_for_serializer = model_to_dict(auth)
+            logger.info(auto_for_serializer)
+            data = {'data': auto_for_serializer, 'status': 201}
+            return JsonResponse(data, status=201)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({"error": "Profilo utente non trovato"}, status=404)
+
