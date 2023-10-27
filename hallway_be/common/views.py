@@ -41,7 +41,7 @@ def user_log(request):
                 return JsonResponse(data, status=201)
             else:
                 logger.info('user is none')
-                data = {'data': 'Utente non autorizzato (utente vuoto)', 'status': 401}
+                data = {'data': 'Utente non autorizzato', 'status': 401}
                 return JsonResponse(data, status=401)
         else:
             logger.error(serializer.errors)  
