@@ -29,13 +29,16 @@ def user_log(request):
         #get the data in a format that the serializer can handle
         data = json.loads(request.body.decode('utf-8'))
         serializer = UserLoginSerializer(data=data)
+        #logger.info(request.META)
         if serializer.is_valid():
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
             user = authenticate(username=username, password=password)
+            logger.info('serializer is valid')
+            logger.info(user)
             if user is not None:
                 login(request, user)
-                data = {'data': 'Login effettuato', 'status': 201}
+                data = {'data': 'Login effettuato', 'userid': user.id, 'status': 201}
                 return JsonResponse(data, status=201)
             else:
                 data = {'data': 'Utente non autorizzato', 'status': 401}

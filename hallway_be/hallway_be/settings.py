@@ -38,9 +38,6 @@ SECRET_KEY = 'django-insecure-c6!)jgz8w3et!tlnhab^&lbcm__e04zj=#x72yr$1$##!g(9$t
 DEBUG = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -195,9 +192,7 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:4200']
 CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"               #It's the header capitalized, with - turned to _ and with HTTP_ before
 
 
-
-
-"""ALLOWED_HOSTS = ['localhost',], """
+ALLOWED_HOSTS = ['127.0.0.1:8000','127.0.0.1','localhost','http://localhost:4200']
 
 LOGGING = {
     'version': 1,
