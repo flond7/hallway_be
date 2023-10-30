@@ -4,6 +4,7 @@ from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
+from django.contrib.auth.models import User
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -51,11 +52,24 @@ def user_log(request):
 def get_user_profiles_auth(request, pk):
     if request.method == "GET":
         try:
-            auth = UserProfile.objects.get(pk=pk)
+            # Retrieve the user with ID 4
+            user_with_profile = User.objects.get(id=pk)
+
+            # Access the associated user profile
+            user_profile = user_with_profile.userprofile
+
+            # Now you can access the fields in the user profile
+            #authorized_aa = user_profile.authorized_aa
+            #authorized_peg = user_profile.authorized_peg
+            #user = User.ogjects.get(id=pk)
+            #auth = UserProfile.objects.get(user=user)
             # Convert the UserProfile object to a dictionary so the serializer can use it
-            auto_for_serializer = model_to_dict(auth)
-            logger.info(auto_for_serializer)
-            data = {'data': auto_for_serializer, 'status': 201}
+            #auto_for_serializer = model_to_dict(auth)
+            #logger.info(auto_for_serializer)
+            data = {'data': {
+                'authorized_aa': user_profile.authorized_aa,
+                'authorized_peg': user_profile.authorized_peg,
+            }, 'status': 201}
             return JsonResponse(data, status=201)
         except UserProfile.DoesNotExist:
             return JsonResponse({"error": "Profilo utente non trovato"}, status=404)
