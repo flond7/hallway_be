@@ -188,11 +188,25 @@ CORS_ALLOW_HEADERS = ["Access-Control-Allow-Origin", "content-type", "cache-cont
 CORS_ALLOWED_METHODS = ['DELETE','GET','OPTIONS','PATCH','POST','PUT',]
 
 #CSRF SETTINGS
-CSRF_TRUSTED_ORIGINS = ['http://localhost:4200']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:4200', 'http://127.0.0.1:8000/*']
 CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"               #It's the header capitalized, with - turned to _ and with HTTP_ before
+CSRF_COOKIE_DOMAIN = ['http://127.0.0.1:8000']
+#CSRF_COOKIE_DOMAIN = ['localhost', 'http://localhost:4200', 'http://127.0.0.1']
+#CSRF_COOKIE_HTTPONLY = False    # False allows js to acess it
+CSRF_COOKIE_PATH = '/'
 
 
-ALLOWED_HOSTS = ['127.0.0.1:8000','127.0.0.1','localhost','http://localhost:4200']
+""" 
+CSRF_COOKI_ESAMESITE = 'Strict'
+CSRF_COOKIE_HTTPONLY = True
+
+SESSION_COOKIE_SAMESITE = 'Strict'
+SESSION_COOKIE_HTTPONLY = True """
+
+
+
+
+ALLOWED_HOSTS = ['http://127.0.0.1:8000/*','127.0.0.1','localhost','http://localhost:4200']
 
 LOGGING = {
     'version': 1,
