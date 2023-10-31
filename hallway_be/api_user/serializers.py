@@ -14,4 +14,4 @@ class UserListSerializer(serializers.ModelSerializer):
 class PAUserPEGSerializer(serializers.ModelSerializer):
     class Meta:
         model = PAUser
-        fields = ('name', 'surname', 'jobCategory')
+        fields = ('id', 'name', 'surname', 'jobCategory')

@@ -29,7 +29,7 @@ from django.contrib import messages
 # MY VARS
 from .constants import MY_CONST
 from .modelsConstants import *
-from .models import customUser, askUser
+from .models import customUser, askUser, PAUser
 from .forms import customUserForm, askUserForm
 from .filters import customUserFilter
 from .serializers import UserListSerializer, PAUserPEGSerializer
@@ -415,9 +415,9 @@ def office_list(request):
 
 # NEW VERSION
 
-def get_all_PAUsers_PEG(request):
+def pauser_list_peg(request):
   if request.method == "GET":
     PAUserList = PAUser.objects.all()
     serializer = PAUserPEGSerializer(PAUserList, many=True)
-    data = {'data': serializer, 'status': 201}
+    data = {'data': serializer.data, 'status': 201}
   return JsonResponse(data, status=201)
