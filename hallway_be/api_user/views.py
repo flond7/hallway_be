@@ -411,3 +411,12 @@ def user_list(request):
 @api_view(['GET'])
 def office_list(request):
     return Response(MAIN_OFFICE_CHOICES)
+
+
+
+def get_all_PAUsers(request):
+  if request.method == "GET":
+    PAUserList = PAUser.objects.all()
+    serializer = accessoAttiSerializer(PAUserList, many=True)
+    data = {'data': serializer, 'status': 201}
+  return JsonResponse(data, status=201)
