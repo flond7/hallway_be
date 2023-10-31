@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
 from django.contrib.auth.models import User
@@ -19,10 +19,18 @@ from django.http import HttpResponse
 
 logger = logging.getLogger(__name__)
 
-@csrf_exempt
+""" @csrf_exempt
 def get_csrf_token(request):
     csrf_token = get_token(request)
-    return JsonResponse({'csrf_token': csrf_token})
+
+    response = JsonResponse({'csrf_token': csrf_token})
+    response.set_cookie('csrf_token', csrf_token, max_age=3600)  # Set a custom cookie
+    return response """
+
+#@ensure_csrf_cookie
+def get_csrf_token(request):
+    logger.info(request)
+    return JsonResponse({'message': 'CSRF cookie set'})
 
 @csrf_exempt
 def user_log(request):
@@ -30,7 +38,7 @@ def user_log(request):
         #get the data in a format that the serializer can handle
         data = json.loads(request.body.decode('utf-8'))
         serializer = UserLoginSerializer(data=data)
-        #logger.info(request.META)
+        logger.info(request.META)
         if serializer.is_valid():
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
