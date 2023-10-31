@@ -8,13 +8,12 @@ from .serializers import obbiettivoPegSerializer
 
 @csrf_exempt
 def goal_create(request):
-    aa = accessoAttiForm()
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            g = accessoAttiForm(data)
+            g = obbiettivoPegForm(data)
             if aa.is_valid():
-                aa.save()
+                g.save()
                 return JsonResponse({"data": "Record saved correctly", 'status': 200}, status=200)
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
