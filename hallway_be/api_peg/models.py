@@ -3,7 +3,7 @@ from api_user.models import PAUser
 
 # Create your models here.
 
-class obbiettivo(models.Model):
+class obbiettivoPeg(models.Model):
  
   year = models.CharField(max_length = 10, blank=True)
   office = models.CharField(max_length = 10, blank=True)
