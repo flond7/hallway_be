@@ -11,7 +11,7 @@ class UserListSerializer(serializers.ModelSerializer):
 
 # UserListSerializer 
 # retrieves only the data needed to work with api_peg and create a list of users
-class accessoAttiSerializer(serializers.ModelSerializer):
+class PAUserPEGSerializer(serializers.ModelSerializer):
     class Meta:
         model = PAUser
-        fields = '__all__'
+        fields = ('name', 'surname', 'jobCategory')

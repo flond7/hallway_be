@@ -32,7 +32,7 @@ from .modelsConstants import *
 from .models import customUser, askUser
 from .forms import customUserForm, askUserForm
 from .filters import customUserFilter
-from .serializers import UserListSerializer
+from .serializers import UserListSerializer, PAUserPEGSerializer
 
 
 generic_context = {
@@ -413,10 +413,11 @@ def office_list(request):
     return Response(MAIN_OFFICE_CHOICES)
 
 
+# NEW VERSION
 
-def get_all_PAUsers(request):
+def get_all_PAUsers_PEG(request):
   if request.method == "GET":
     PAUserList = PAUser.objects.all()
-    serializer = accessoAttiSerializer(PAUserList, many=True)
+    serializer = PAUserPEGSerializer(PAUserList, many=True)
     data = {'data': serializer, 'status': 201}
   return JsonResponse(data, status=201)
