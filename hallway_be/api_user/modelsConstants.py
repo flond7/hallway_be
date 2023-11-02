@@ -2,7 +2,7 @@ MAIN_OFFICE_CHOICES = [
   ('o0', '--'),
   ('o1', 'Informatica'),
   ('o2', 'Ragioneria'),
-  ('o3', 'Tributi'),
+  ('o3', 'Personale'),
   ('o4', 'Segreteria'),
   ('o5', 'Urp'),
   ('o6', 'Protocollo'),
