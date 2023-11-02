@@ -81,11 +81,3 @@ def get_user_profiles_auth(request, pk):
             return JsonResponse(data, status=201)
         except UserProfile.DoesNotExist:
             return JsonResponse({"error": "Profilo utente non trovato"}, status=404)
-
-
-def constants_list(request):
-  if request.method == "GET":
-    constants = {
-        'main_office_choices': MAIN_OFFICE_CHOICES,
-    }
-  return JsonResponse(constants, status=201)

@@ -414,7 +414,6 @@ def office_list(request):
 
 
 # NEW VERSION
-
 def pauser_list_peg(request):
   if request.method == "GET":
     PAUserList = PAUser.objects.all()
@@ -429,3 +428,10 @@ def pauser_po_list_peg(request):
     serializer = PAUserPEGSerializer(PAUserList, many=True)
     data = {'data': serializer.data, 'status': 201}
   return JsonResponse(data, status=201)
+
+def user_constants_list(request):
+  if request.method == "GET":
+    constants = {
+        'main_office_choices': MAIN_OFFICE_CHOICES,
+    }
+  return JsonResponse(constants, status=201)

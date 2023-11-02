@@ -26,5 +26,6 @@ urlpatterns = [
   
   path('pauser_list_peg', views.pauser_list_peg, name="pauser_list_peg"),
   path('pauser_po_list_peg', views.pauser_po_list_peg, name="pauser_po_list_peg"),
+  path('user_constants_list', views.user_constants_list, name="user_constants_list"),
   
  ] 
