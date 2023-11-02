@@ -421,3 +421,11 @@ def pauser_list_peg(request):
     serializer = PAUserPEGSerializer(PAUserList, many=True)
     data = {'data': serializer.data, 'status': 201}
   return JsonResponse(data, status=201)
+
+
+def pauser_po_list_peg(request):
+  if request.method == "GET":
+    PAUserList = PAUser.objects.filter(responsable = True)
+    serializer = PAUserPEGSerializer(PAUserList, many=True)
+    data = {'data': serializer.data, 'status': 201}
+  return JsonResponse(data, status=201)

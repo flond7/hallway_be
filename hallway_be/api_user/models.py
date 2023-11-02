@@ -55,16 +55,6 @@ class userSDI (models.Model):
   def __str__(self):
     return self.sdiId
 
-class PAUser(models.Model):
-  name = models.CharField("Nome", max_length=100, blank=True, default='')
-  surname = models.CharField("Cognome", max_length=100, blank=True, default='')
-  cf = models.CharField("Codice fiscale", max_length=100, blank=True, default='')
-  office = models.CharField("Ufficio principale",max_length = 4, choices = MAIN_OFFICE_CHOICES, default = 'o0', blank=False) #assegnazione a un ufficio principale, per capirsi
-  jobCategory = models.CharField("Categoria",max_length = 5, default = '', blank=True) #C1, C2, D1, D2... per eventuale recupero gesnet
-
-  def __str__(self):
-    return self.name + ' ' + self.surname
-
 
 class customUser(models.Model):
   #_id = models.ObjectIdField()
@@ -256,6 +246,36 @@ class askUser(models.Model):
 
   class Meta:
     ordering = []
+
+  def __str__(self):
+    return self.name + ' ' + self.surname
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class PAUser(models.Model):
+  name = models.CharField("Nome", max_length=100, blank=True, default='')
+  surname = models.CharField("Cognome", max_length=100, blank=True, default='')
+  cf = models.CharField("Codice fiscale", max_length=100, blank=True, default='')
+  office = models.CharField("Ufficio principale",max_length = 4, choices = MAIN_OFFICE_CHOICES, default = 'o0', blank=False) #assegnazione a un ufficio principale, per capirsi
+  jobCategory = models.CharField("Categoria",max_length = 5, default = '', blank=True) #C1, C2, D1, D2... per eventuale recupero gesnet
+  responsable = models.BooleanField(default = False)
+  responsableOffice = MultiSelectField(max_length = 100, choices = MAIN_OFFICE_CHOICES, default = 'mo0', blank=False)
 
   def __str__(self):
     return self.name + ' ' + self.surname
