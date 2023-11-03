@@ -1,3 +1,9 @@
+# How to set up new PA
+- Create the PAOffices (api_users). They will be used for USERS, PEG api
+- Create the PAUsers (api_users) and assign the managers (PO) with the related offices. They will be used for USERS, PEG api
+
+
+
 # Office description
 - You set all the constants in the backend and create API to eventually retrieve them for the front end.
 - You set them in the modelsConstants.py files
