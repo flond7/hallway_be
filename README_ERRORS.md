@@ -50,3 +50,11 @@ DJANGO ERRORS
   git config --list
 - if it's not setted to id 
   git config --global http.proxy http://proxyuser:proxypwd@proxy.server.com:8080
+
+
+*** API ERROR ***
+*** Expected a list of items but got type bytes ***
+- add json.loads to the django view to turn bytes into a readable json data 
+  data = json.loads(request.body)
+- It might be that you're sending a list [] instead of an object {}. Check that in front end. 
+- If you want to send a list and see this error update serializer adding (many=True) - SEE README_DJANGO.MD

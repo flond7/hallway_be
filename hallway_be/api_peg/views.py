@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from rest_framework.response import Response
+#from rest_framework.response import Response
 #from rest_framework import status
 import json
 
@@ -49,7 +49,7 @@ def create_multiple_goals(request):
 def create_multiple_goals(request):
     if request.method == 'POST':
         try:
-            data = request.body  # Log the request data for debugging
+            data = json.loads(request.body)  # Log the request data for debugging
             logger.info(data)
             serializer = goalPegSerializer(data=data, many=True)
             if serializer.is_valid():
