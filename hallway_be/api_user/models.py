@@ -272,10 +272,18 @@ class PAUser(models.Model):
   name = models.CharField("Nome", max_length=100, blank=True, default='')
   surname = models.CharField("Cognome", max_length=100, blank=True, default='')
   cf = models.CharField("Codice fiscale", max_length=100, blank=True, default='')
-  office = models.CharField("Ufficio principale",max_length = 4, choices = MAIN_OFFICE_CHOICES, default = 'o0', blank=False) #assegnazione a un ufficio principale, per capirsi
+  mainOffice = models.ForeignKey(
+    PAOffice,
+    related_name="pauser_office",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
+    on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
+  )
+  #office = models.CharField("Ufficio principale",max_length = 4, choices = MAIN_OFFICE_CHOICES, default = 'o0', blank=False) #assegnazione a un ufficio principale, per capirsi
   jobCategory = models.CharField("Categoria",max_length = 5, default = '', blank=True) #C1, C2, D1, D2... per eventuale recupero gesnet
   manager = models.BooleanField(default = False)
-  managerOffice = MultiSelectField(max_length = 100, choices = MAIN_OFFICE_CHOICES, default = 'mo0', blank=False)
+  #managerOffice = MultiSelectField(max_length = 100, choices = MAIN_OFFICE_CHOICES, default = 'mo0', blank=False)
+  managerOfOffices = models.ManyToManyField(
+    PAOffice, 
+    related_name="pauser_managerOfOffices")
 
   def __str__(self):
     return self.name + ' ' + self.surname
