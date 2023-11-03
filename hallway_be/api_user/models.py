@@ -261,11 +261,11 @@ class askUser(models.Model):
 
 
 
+class PAOffice(models.Model):
+  name = models.CharField("Nome", max_length=200, blank=False, default='')
 
-
-
-
-
+  def __str__(self):
+    return self.name
 
 
 class PAUser(models.Model):

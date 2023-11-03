@@ -1,4 +1,4 @@
-from .models import customUser, askUser, PAUser
+from .models import customUser, askUser, PAUser, PAOffice
 from rest_framework import serializers
 
 # UserListSerializer 
@@ -15,3 +15,8 @@ class PAUserPEGSerializer(serializers.ModelSerializer):
     class Meta:
         model = PAUser
         fields = ('id', 'name', 'surname', 'jobCategory', 'manager', 'managerOffice')
+
+class PAOfficeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PAOffice
+        fields = '__all__'

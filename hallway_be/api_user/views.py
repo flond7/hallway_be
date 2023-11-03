@@ -29,10 +29,10 @@ from django.contrib import messages
 # MY VARS
 from .constants import MY_CONST
 from .modelsConstants import *
-from .models import customUser, askUser, PAUser
+from .models import customUser, askUser, PAUser, PAOffice
 from .forms import customUserForm, askUserForm
 from .filters import customUserFilter
-from .serializers import UserListSerializer, PAUserPEGSerializer
+from .serializers import UserListSerializer, PAUserPEGSerializer, PAOfficeSerializer
 
 
 generic_context = {
@@ -414,7 +414,7 @@ def office_list(request):
 
 
 # NEW VERSION
-def pauser_list_peg(request):
+def pauser_list(request):
   if request.method == "GET":
     PAUserList = PAUser.objects.all()
     serializer = PAUserPEGSerializer(PAUserList, many=True)
@@ -422,7 +422,7 @@ def pauser_list_peg(request):
   return JsonResponse(data, status=201)
 
 
-def pauser_po_list_peg(request):
+def pauser_po_list(request):
   if request.method == "GET":
     PAUserList = PAUser.objects.filter(manager = True)
     serializer = PAUserPEGSerializer(PAUserList, many=True)
@@ -435,3 +435,10 @@ def user_constants_list(request):
         'main_office_choices': MAIN_OFFICE_CHOICES,
     }
   return JsonResponse(constants, status=201)
+
+def paoffice_list(request):
+  if request.method == "GET":
+    PAOfficeList = PAOffice.objects.all()
+    serializer = PAOfficeSerializer(PAOfficeList, many=True)
+    data = {'data': serializer.data, 'status': 201}
+  return JsonResponse(data, status=201)
