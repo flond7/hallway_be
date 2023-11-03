@@ -28,4 +28,4 @@ class goalPeg(models.Model):
     ordering = []
 
   def __str__(self):
-    return self
+    return self.name
