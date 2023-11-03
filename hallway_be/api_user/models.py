@@ -283,7 +283,8 @@ class PAUser(models.Model):
   #managerOffice = MultiSelectField(max_length = 100, choices = MAIN_OFFICE_CHOICES, default = 'mo0', blank=False)
   managerOfOffices = models.ManyToManyField(
     PAOffice, 
-    related_name="pauser_managerOfOffices")
+    related_name="pauser_managerOfOffices"
+    )
 
   def __str__(self):
     return self.name + ' ' + self.surname
