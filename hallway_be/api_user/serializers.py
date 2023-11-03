@@ -6,17 +6,20 @@ from rest_framework import serializers
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = customUser
-        fields = ('id', 'name', 'surname', 'jobCategory', 'manager', 'managerOffice')
+        fields = ('id', 'name', 'surname', 'jobCategory')
 
-
-# UserListSerializer 
-# retrieves only the data needed to work with api_peg and create a list of users
-class PAUserPEGSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PAUser
-        fields = ('id', 'name', 'surname', 'jobCategory', 'manager', 'managerOffice')
 
 class PAOfficeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PAOffice
         fields = '__all__'
+
+
+# UserListSerializer 
+# retrieves only the data needed to work with api_peg and create a list of users
+class PAUserPEGSerializer(serializers.ModelSerializer):
+    managerOfOffices = PAOfficeSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = PAUser
+        fields = ('id', 'name', 'surname', 'jobCategory', 'manager', 'managerOfOffices')
