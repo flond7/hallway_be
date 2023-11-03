@@ -10,12 +10,12 @@ class goalPeg(models.Model):
   name = models.CharField(max_length = 10, blank=True)
   descripition = models.CharField(max_length = 600, blank=True)
   weight = models.IntegerField()
-  responsable = models.CharField(max_length = 40, blank=True)
+  manager = models.CharField(max_length = 40, blank=True)
   percent_3006 = models.IntegerField()
   weight_3006 = models.IntegerField()
   percent_3112 = models.IntegerField()
   weight_3112 = models.IntegerField()
-  people = models.ManyToManyField(PAUser)
+  involvedPeople = models.ManyToManyField(PAUser)
 
   class Meta:
     ordering = []

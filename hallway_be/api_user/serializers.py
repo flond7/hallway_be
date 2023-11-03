@@ -6,7 +6,7 @@ from rest_framework import serializers
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = customUser
-        fields = ('id', 'name', 'surname', 'jobCategory', 'responsable', 'responsableOffice')
+        fields = ('id', 'name', 'surname', 'jobCategory', 'manager', 'managerOffice')
 
 
 # UserListSerializer 
@@ -14,4 +14,4 @@ class UserListSerializer(serializers.ModelSerializer):
 class PAUserPEGSerializer(serializers.ModelSerializer):
     class Meta:
         model = PAUser
-        fields = ('id', 'name', 'surname', 'jobCategory', 'responsable', 'responsableOffice')
+        fields = ('id', 'name', 'surname', 'jobCategory', 'manager', 'managerOffice')
