@@ -12,7 +12,7 @@ class goalPeg(models.Model):
     related_name="goal_office",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
     on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
   ) """
-  name = models.CharField(max_length = 10, blank=True)
+  name = models.CharField(max_length = 500, blank=True)
   descripition = models.CharField(max_length = 600, blank=True)
   weight = models.IntegerField()
   manager = models.ForeignKey(
