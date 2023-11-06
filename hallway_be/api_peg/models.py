@@ -24,6 +24,7 @@ class goalPeg(models.Model):
   weight_3006 = models.IntegerField()
   percent_3112 = models.IntegerField()
   weight_3112 = models.IntegerField()
+  type = models.CharField(max_length = 13, blank=False)
   involvedPeople = models.ManyToManyField(
     PAUser, 
     related_name="goal_involvedPeople")
