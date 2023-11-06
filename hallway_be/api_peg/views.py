@@ -15,6 +15,39 @@ logger = logging.getLogger(__name__)
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
+def get_person_results(request, name):
+    if request.method == "GET":
+        try:
+            data = json.loads(request.body)
+            g = goalPegForm(data)
+            if g.is_valid():
+                g.save()
+                return JsonResponse({"data": "Record saved correctly", 'status': 200}, status=200)
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error: {e}")
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+@csrf_exempt
+def get_person_results(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            year = data['year']  # Access the 'year' field from the JSON data
+            idPerson = data['id']
+            goalList = goalPeg.objects.filter(
+                involvedPeople__id=idPerson,
+                year=year
+            )
+            serializer = goalPegSerializer(goalList, many=True)
+            return JsonResponse({"data": serializer.data}, status=200)
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error: {e}")
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+        return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@csrf_exempt
 def goal_create(request):
     if request.method == "POST":
         try:

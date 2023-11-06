@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
   path('goal_new', views.goal_create, name="goal_new"), 
   path('goals_new', views.create_multiple_goals, name='goals_new'),
+  path('get_person_results', views.get_person_results, name='get_person_results'),
  ] 
