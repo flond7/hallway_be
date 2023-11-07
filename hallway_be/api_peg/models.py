@@ -13,7 +13,7 @@ class goalPeg(models.Model):
     on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
   )
   name = models.CharField(max_length = 500, blank=True)
-  descripition = models.CharField(max_length = 600, blank=True)
+  description = models.CharField(max_length = 600, blank=True)
   weight = models.IntegerField()
   manager = models.ForeignKey(
     PAUser,
