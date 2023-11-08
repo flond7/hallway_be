@@ -50,6 +50,26 @@ def get_person_results(request):
 
 
 @csrf_exempt
+def get_po_results(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            year = data['year']  # Access the 'year' field from the JSON data
+            idPerson = data['id']
+            goalList = goalPeg.objects.filter(
+                manager__id=idPerson,
+                year=year
+            )
+            serializer = goalPegSerializer(goalList, many=True)
+            return JsonResponse({"data": serializer.data}, status=200)
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error: {e}")
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+        return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+
+@csrf_exempt
 def goal_create(request):
     if request.method == "POST":
         try:
