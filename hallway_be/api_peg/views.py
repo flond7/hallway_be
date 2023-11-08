@@ -114,7 +114,7 @@ def get_goals_numbers(request):
             offices = PAOffice.objects.all()
 
             # Initialize a list to store the goal counts for each office
-            data = {}
+            data = []
 
             for office in offices:
                 # Filter goals by year and office
@@ -129,9 +129,9 @@ def get_goals_numbers(request):
                 }
 
                 # Store the counts in the dictionaries
-                data[office.name] = office_data
+                data.append(office_data)
 
-            return JsonResponse(data, status=200)
+            return JsonResponse(data, status=200, safe=False)
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
