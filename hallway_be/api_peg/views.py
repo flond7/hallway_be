@@ -8,6 +8,8 @@ from .models import goalPeg
 from .forms import goalPegForm
 from .serializers import goalPegSerializer
 
+from api_user.models import PAOffice
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -55,7 +57,11 @@ def goal_create(request):
             g = goalPegForm(data)
             if g.is_valid():
                 g.save()
-                return JsonResponse({"data": "Record saved correctly", 'status': 200}, status=200)
+                # Get the ID of the newly created record
+                new_record_id = g.id
+                logger.info(g.id)
+                logger.info('g.id')
+                return JsonResponse({"id": new_record_id, 'status': 200}, status=200)
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
@@ -96,3 +102,37 @@ def create_multiple_goals(request):
             return JsonResponse({"error": "An error occurred"}, status=400)
     return JsonResponse({"error": "Invalid request method"}, status=400)
 
+
+@csrf_exempt
+def get_goals_numbers(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            year = data['year']  # Access the 'year' field from the JSON data
+
+            # Get a list of all offices in the database
+            offices = PAOffice.objects.all()
+
+            # Initialize a list to store the goal counts for each office
+            data = {}
+
+            for office in offices:
+                # Filter goals by year and office
+                ordinary_goals = goalPeg.objects.filter(year=year, office=office.id, type="ordinary").count()
+                extraordinary_goals = goalPeg.objects.filter(year=year, office=office.id, type="extraordinary").count()
+                
+                # Create a nested dictionary for each office
+                office_data = {
+                    "ordinary": ordinary_goals,
+                    "extraordinary": extraordinary_goals,
+                    "name": office.name
+                }
+
+                # Store the counts in the dictionaries
+                data[office.name] = office_data
+
+            return JsonResponse(data, status=200)
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error: {e}")
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+    return JsonResponse({"error": "Invalid request"}, status=400)
