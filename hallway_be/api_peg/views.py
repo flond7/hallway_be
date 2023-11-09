@@ -75,7 +75,7 @@ def get_office_results(request):
             year = data['year']  # Access the 'year' field from the JSON data
             idOffice = data['id']
             goalList = goalPeg.objects.filter(
-                office__id=idPerson,
+                office__id=idOffice,
                 year=year
             )
             serializer = goalPegSerializer(goalList, many=True)
