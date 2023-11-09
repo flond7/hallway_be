@@ -6,6 +6,7 @@ urlpatterns = [
   path('goals_new', views.create_multiple_goals, name='goals_new'),
   path('get_person_results', views.get_person_results, name='get_person_results'),
   path('get_po_results', views.get_po_results, name='get_po_results'),
+  path('get_office_results', views.get_office_results, name='get_office_results'),
   path('get_goals_numbers', views.get_goals_numbers, name='get_goals_numbers'),
   #path('get_po_results', views.get_po_results, name='get_po_results'),
  ] 
