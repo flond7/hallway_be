@@ -1,11 +1,12 @@
 from .models import goalPeg
-from api_user.serializers import PAOfficeSerializer
+from api_user.serializers import PAOfficeSerializer, PAUserPEGSerializer
 from rest_framework import serializers
 
 # UserListSerializer 
 # retrieves only the data needed to work with api_peg and create a list of users
 class goalPegSerializer(serializers.ModelSerializer):
     office = PAOfficeSerializer(many=False, read_only=True)
+    manager = PAUserPEGSerializer(many=False, read_only=True)
 
     class Meta:
         model = goalPeg
