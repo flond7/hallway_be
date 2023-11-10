@@ -8,7 +8,7 @@ from .models import goalPeg
 from .forms import goalPegForm
 from .serializers import goalPegSerializer, goalPegCreateSerializer
 
-from api_user.models import PAOffice
+from api_user.models import PAOffice, PAUser
 
 import logging
 logger = logging.getLogger(__name__)
@@ -147,10 +147,6 @@ def delete_multiple_goals(request):
     return JsonResponse({"error": "Invalid request method"}, status=400)
 
 
-
-
-
-
 @csrf_exempt
 def update_multiple_goals(request):
     if request.method == 'PUT':
@@ -170,9 +166,18 @@ def update_multiple_goals(request):
                     goal.name = goal_data.get("name", goal.name)
                     goal.description = goal_data.get("description", goal.description)
                     goal.year = goal_data.get("name", goal.name)
-                    goal.office = goal_data.get("office", goal.office)
+                    
+                    # get object before assignment
+                    officeId = goal_data.get("office", goal.office)
+                    office_object = PAOffice.objects.get(pk=officeId)
+                    goal.office = office_object
+
+                    # get object before assignment
+                    managerId = goal_data.get("manager", goal.manager)
+                    manager_object = PAUser.objects.get(pk=managerId)
+                    goal.manager = manager_object
+                    
                     goal.weight = goal_data.get("weight", goal.weight)
-                    goal.manager = goal_data.get("manager", goal.manager)
                     goal.percent_3006 = goal_data.get("percent_3006", goal.percent_3006)
                     goal.weight_3006 = goal_data.get("weight_3006", goal.weight_3006)
                     goal.percent_3112 = goal_data.get("percent_3112", goal.percent_3112)
