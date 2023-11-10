@@ -6,7 +6,7 @@ import json
 
 from .models import goalPeg
 from .forms import goalPegForm
-from .serializers import goalPegSerializer
+from .serializers import goalPegSerializer, goalPegCreateSerializer
 
 from api_user.models import PAOffice
 
@@ -109,7 +109,7 @@ def create_multiple_goals(request):
         try:
             data = json.loads(request.body)  # Log the request data for debugging
             logger.info(data)
-            serializer = goalPegSerializer(data=data, many=True)
+            serializer = goalPegCreateSerializer(data=data, many=True)
             if serializer.is_valid():
                 serializer.save()
                 return JsonResponse({"data": "Records saved correctly"}, status=201)
@@ -143,6 +143,49 @@ def delete_multiple_goals(request):
             logger.error(f"Error: {str(e)}")
             return JsonResponse({"error": "An error occurred while deleting goals"}, status=400)
     return JsonResponse({"error": "Invalid request method"}, status=400)
+
+@csrf_exempt
+def update_multiple_goals(request):
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            logger.info(data)  # Log the request data for debugging
+            
+            # goals_data = data.get("goals", [])  # Assuming 'goals' is the key in your JSON data
+
+            for goal_data in data:
+                goal_id = goal_data.get("id") 
+                try:
+                    goal = goalPeg.objects.get(pk=goal_id)
+
+                    # Update the fields of the goal based on the incoming data
+                    # Example: assuming 'name' and 'description' can be updated
+                    goal.name = goal_data.get("name", goal.name)
+                    goal.description = goal_data.get("description", goal.description)
+                    goal.year = goal_data.get("name", goal.name)
+                    goal.office = goal_data.get("office", goal.office)
+                    goal.weight = goal_data.get("weight", goal.weight)
+                    goal.manager = goal_data.get("manager", goal.manager)
+                    goal.percent_3006 = goal_data.get("percent_3006", goal.percent_3006)
+                    goal.weight_3006 = goal_data.get("weight_3006", goal.weight_3006)
+                    goal.percent_3112 = goal_data.get("percent_3112", goal.percent_3112)
+                    goal.weight_3112 = goal_data.get("weight_3112", goal.weight_3112)
+                    goal.type = goal_data.get("type", goal.name)
+                    goal.involvedPeople = goal_data.get("involvedPeople", goal.involvedPeople)
+  
+                    goal.save()  # Save the updated goal
+                except goalPeg.DoesNotExist:
+                    # Handle case where the goal with that ID doesn't exist
+                    JsonResponse({"data": "Il record che stai cercando di aggiornare non esiste"}, status=400)
+                    pass
+
+            return JsonResponse({"data": "Goals updated successfully"}, status=200)
+        except Exception as e:
+            logger.error(f"Error: {str(e)}")
+            return JsonResponse({"error": "An error occurred while updating goals"}, status=400)
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
 
 @csrf_exempt
 def get_goals_numbers(request):
