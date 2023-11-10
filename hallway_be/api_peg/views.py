@@ -121,28 +121,35 @@ def create_multiple_goals(request):
             return JsonResponse({"error": "An error occurred"}, status=400)
     return JsonResponse({"error": "Invalid request method"}, status=400)
 
+
 @csrf_exempt
 def delete_multiple_goals(request):
     if request.method == 'DELETE':
         try:
+            logger.info(request.body)  # Log the request data for debugging
             data = json.loads(request.body)
             logger.info(data)  # Log the request data for debugging
-            
-            goal_ids = data.get("id", [])  # Assuming 'id' is the key in your JSON data
 
-            for goal_id in goal_ids:
+            for goal_id in data:
                 try:
                     goal = goalPeg.objects.get(pk=goal_id)
                     goal.delete()
                 except goalPeg.DoesNotExist:
-                    # Handle case where the goal with that ID doesn't exist
-                    return JsonResponse({"data": "L'elemento che stai cercando di eliminare non esiste"}, status=400)
-                    pass
-            return JsonResponse({"data": "I record sono stati cancellati"}, status=200)
+                    return JsonResponse({"data": f"Goal with ID {goal_id} does not exist"}, status=400)
+
+            return JsonResponse({"data": "Records have been deleted"}, status=200)
+        except json.JSONDecodeError as e:
+            logger.error(f"Error decoding JSON: {str(e)}")
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
         except Exception as e:
             logger.error(f"Error: {str(e)}")
             return JsonResponse({"error": "An error occurred while deleting goals"}, status=400)
     return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+
+
+
 
 @csrf_exempt
 def update_multiple_goals(request):
