@@ -28,5 +28,5 @@ urlpatterns = [
   path('pauser_po_list_peg', views.pauser_po_list, name="pauser_po_list_peg"),
   path('user_constants_list', views.user_constants_list, name="user_constants_list"),
   path('paoffice_list', views.paoffice_list, name="paoffice_list"),
-  
+  path('paoffice_and_po_list', views.paoffice_and_po_list, name="paoffice_and_po_list"),
  ] 
