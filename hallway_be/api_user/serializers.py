@@ -21,7 +21,7 @@ class ManagerForOfficeSerialzer(serializers.ModelSerializer):
         fields = ('id', 'name', 'surname')
 
 class PAOfficeAndPOSerializer(serializers.ModelSerializer):
-    manager = PAUserForOfficeSerialzer(source='get_manager', read_only=True)
+    manager = ManagerForOfficeSerialzer(source='get_manager', read_only=True)
 
     def get_manager(self):
         responsible_person = self.pauser_managerOfOffices.filter(manager=True).first()
