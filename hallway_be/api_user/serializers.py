@@ -13,14 +13,7 @@ class PAOfficeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PAOffice
         fields = '__all__'
-)
 
-class PAOfficeAndPOSerializer(serializers.ModelSerializer):
-    manager = PAUserPEGSerializer(source='get_manager', read_only=True)
-
-    class Meta:
-        model = PAOffice
-        fields = ('id', 'name', 'manager')
 
 
 # UserListSerializer 
@@ -31,3 +24,11 @@ class PAUserPEGSerializer(serializers.ModelSerializer):
     class Meta:
         model = PAUser
         fields = ('id', 'name', 'surname', 'jobCategory', 'manager', 'managerOfOffices')
+
+
+class PAOfficeAndPOSerializer(serializers.ModelSerializer):
+    manager = PAUserPEGSerializer(source='get_manager', read_only=True)
+
+    class Meta:
+        model = PAOffice
+        fields = ('id', 'name', 'manager')
