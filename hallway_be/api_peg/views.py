@@ -201,7 +201,6 @@ def update_multiple_goals(request):
     return JsonResponse({"error": "Invalid request method"}, status=400)
 
 
-
 @csrf_exempt
 def get_goals_numbers(request):
     if request.method == "POST":
@@ -231,6 +230,20 @@ def get_goals_numbers(request):
                 data.append(office_data)
 
             return JsonResponse(data, status=200, safe=False)
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error: {e}")
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+@csrf_exempt
+def check_existing_goals(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            year = data['year']  
+            office_id = data['officeId']
+            records_exist = goalPeg.objects.filter(office_id=office_id, year=year).exists()
+            return JsonResponse(records_exist, status=200, safe=False)
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
