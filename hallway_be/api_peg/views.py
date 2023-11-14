@@ -165,7 +165,7 @@ def update_multiple_goals(request):
                     # Example: assuming 'name' and 'description' can be updated
                     goal.name = goal_data.get("name", goal.name)
                     goal.description = goal_data.get("description", goal.description)
-                    goal.year = goal_data.get("name", goal.name)
+                    goal.year = goal_data.get("year", goal.year)
                     
                     # get object before assignment
                     officeId = goal_data.get("office", goal.office)
@@ -183,12 +183,15 @@ def update_multiple_goals(request):
                     goal.percent_3112 = goal_data.get("percent_3112", goal.percent_3112)
                     goal.weight_3112 = goal_data.get("weight_3112", goal.weight_3112)
                     goal.type = goal_data.get("type", goal.name)
-                    goal.involvedPeople = goal_data.get("involvedPeople", goal.involvedPeople)
+
+                    #goal.involvedPeople = goal_data.get("involvedPeople", goal.involvedPeople)
+                    involved_people_data = goal_data.get("involvedPeople", [])
+                    goal.involvedPeople.set(involved_people_data)
   
                     goal.save()  # Save the updated goal
                 except goalPeg.DoesNotExist:
                     # Handle case where the goal with that ID doesn't exist
-                    JsonResponse({"data": "Il record che stai cercando di aggiornare non esiste"}, status=400)
+                    return JsonResponse({"data": "Il record che stai cercando di aggiornare non esiste"}, status=400)
                     pass
 
             return JsonResponse({"data": "Goals updated successfully"}, status=200)

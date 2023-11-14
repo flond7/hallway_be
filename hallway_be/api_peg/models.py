@@ -5,7 +5,7 @@ from api_user.models import PAUser, PAOffice
 
 class goalPeg(models.Model):
  
-  year = models.CharField(max_length = 10, blank=True)
+  year = models.IntegerField(blank=True)
   #office = models.CharField(max_length = 10, blank=True)
   office = models.ForeignKey(
     PAOffice,
