@@ -1,23 +1,29 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-#from rest_framework.response import Response
-#from rest_framework import status
 import json
+
+# REST FRAMEWORK
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 
+# IMPORTS from APP
 from .models import goalPeg
 from .forms import goalPegForm
 from .serializers import goalPegSerializer, goalPegCreateSerializer
-
 from api_user.models import PAOffice, PAUser
 
+# LOGGING
 import logging
 logger = logging.getLogger(__name__)
 
+# STATS and AVARAGE
+import statistics
+from operator import itemgetter
+
 # CORS
 from django.views.decorators.csrf import csrf_exempt
+
 """ 
 @csrf_exempt
 def get_person_results(request, name):
@@ -267,8 +273,6 @@ def update_multiple_goals(request):
 
  """
 
-
-
 @csrf_exempt
 @parser_classes([JSONParser])
 def update_multiple_goals(request):
@@ -301,7 +305,6 @@ def update_multiple_goals(request):
             return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     return JsonResponse({"error": "Invalid request method"}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 @csrf_exempt
@@ -351,3 +354,45 @@ def check_existing_goals(request):
             logger.error(f"JSON parsing error: {e}")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+@csrf_exempt
+def get_average_weight(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            year = data['year']
+            records = goalPeg.objects.filter(year=year)
+
+            if not records.exists():
+                return JsonResponse({"error": "No records found for the given year"}, status=404)
+
+            # Dictionary to store the total weight and count for each person
+            person_weights = {}
+
+            for record in records:
+                involved_people = record.involvedPeople.all()
+                for person in involved_people:
+                    if person.id not in person_weights:
+                        person_weights[person.id] = {'total_weight': 0, 'count': 0}
+
+                    person_weights[person.id]['total_weight'] += record.weight
+                    person_weights[person.id]['count'] += 1
+
+            # Calculate the average weight, itemgetter retrieves total weight, map iterates iteemgetter in all the elements of person weights, and sum sums all the values retrieved
+            sum_weights = sum(map(itemgetter('total_weight'), person_weights.values()))
+            num_people = len(person_weights)
+            avarage = sum_weights / num_people
+
+            # Calculate standard deviation: get the series and then use the statistic function
+            total_weights = [item['total_weight'] for item in person_weights.values()]
+            std_deviation = statistics.stdev(total_weights)
+
+
+        
+            return JsonResponse({"average_weight": avarage, 'standard_deviation': std_deviation}, status=200)
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error: {e}")
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
