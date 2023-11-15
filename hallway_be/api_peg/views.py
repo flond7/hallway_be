@@ -95,13 +95,13 @@ def get_person_min_results(request):
             user_info = PAUser.objects.filter(id=id_person).values('name', 'surname', 'jobCategory').first()
 
             response_data = {
-                "ordinary_goals_count": ordinary_count,
-                "extraordinary_goals_count": extraordinary_count,
+                "ordinary_count": ordinary_count,
+                "extraordinary_count": extraordinary_count,
                 "name": user_info['name'],
                 "surname": user_info['surname'],
                 "jobCategory": user_info['jobCategory'],
-                "percent_realization_ordinary": percent_realization_ordinary,
-                "percent_realization_extraordinary": percent_realization_extraordinary
+                "percent_ordinary": percent_realization_ordinary,
+                "percent_extraordinary": percent_realization_extraordinary
             }
 
             return JsonResponse({"data": response_data}, status=200)
