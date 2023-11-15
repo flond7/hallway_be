@@ -12,5 +12,5 @@ urlpatterns = [
   path('get_goals_numbers', views.get_goals_numbers, name='get_goals_numbers'),
   path('check_existing_goals', views.check_existing_goals, name='check_existing_goals'),
   path('get_average_weight', views.get_average_weight, name='get_average_weight'),
-  #path('check_existing_goals', views.check_existing_goals, name='check_existing_goals'),
+  path('get_person_min_results', views.get_person_min_results, name='get_person_min_results'),
  ] 

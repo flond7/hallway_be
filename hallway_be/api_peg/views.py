@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 # STATS and AVARAGE
 import statistics
+from django.db.models import Count, Sum, F
 from operator import itemgetter
 
 # CORS
@@ -56,6 +57,66 @@ def get_person_results(request):
             logger.error(f"JSON parsing error: {e}")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
         return JsonResponse({"error": "Invalid request"}, status=400)
+
+@csrf_exempt
+def get_person_min_results(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            year = data['year']  # Access the 'year' field from the JSON data
+            id_person = data['id']
+
+            goal_list = goalPeg.objects.filter(
+                involvedPeople__id=id_person,
+                year=year
+            )
+
+            # divide the list in ordinary and extraordinary
+            ordinary_list = goal_list.filter(type='ordinary')
+            extraordinary_list = goal_list.filter(type='extraordinary')
+
+            # Count the number of ordinary and extraordinary goals
+            ordinary_count = ordinary_list.count()
+            extraordinary_count = extraordinary_list.count()
+
+            # Calculate the percentage of realization for ordinary and extraordinary goals
+            total_weight_ordinary = ordinary_list.aggregate(total_weight=Sum('weight'))['total_weight'] or 0
+            total_weight_extraordinary = extraordinary_list.aggregate(total_weight=Sum('weight'))['total_weight'] or 0
+            total_weight_all = total_weight_ordinary + total_weight_extraordinary
+
+            if total_weight_all > 0:
+                percent_realization_ordinary = (total_weight_ordinary / total_weight_all) * 100
+                percent_realization_extraordinary = (total_weight_extraordinary / total_weight_all) * 100
+            else:
+                percent_realization_ordinary = 0
+                percent_realization_extraordinary = 0
+
+            # Get user information
+            user_info = PAUser.objects.filter(id=id_person).values('name', 'surname', 'jobCategory').first()
+
+            response_data = {
+                "ordinary_goals_count": ordinary_count,
+                "extraordinary_goals_count": extraordinary_count,
+                "name": user_info['name'],
+                "surname": user_info['surname'],
+                "jobCategory": user_info['jobCategory'],
+                "percent_realization_ordinary": percent_realization_ordinary,
+                "percent_realization_extraordinary": percent_realization_extraordinary
+            }
+
+            return JsonResponse({"data": response_data}, status=200)
+
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error: {e}")
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+
+
+
+
 
 
 @csrf_exempt
@@ -129,7 +190,6 @@ def create_multiple_goals(request):
             logger.error(f"Error: {str(e)}")
             return JsonResponse({"error": "An error occurred"}, status=400)
     return JsonResponse({"error": "Invalid request method"}, status=400)
-
 
 @csrf_exempt
 def delete_multiple_goals(request):
@@ -305,7 +365,6 @@ def update_multiple_goals(request):
             return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     return JsonResponse({"error": "Invalid request method"}, status=status.HTTP_400_BAD_REQUEST)
-
 
 @csrf_exempt
 def get_goals_numbers(request):
