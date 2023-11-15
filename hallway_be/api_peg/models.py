@@ -9,7 +9,7 @@ class goalPeg(models.Model):
   #office = models.CharField(max_length = 10, blank=True)
   office = models.ForeignKey(
     PAOffice,
-    related_name="goal_office",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
+    related_name="goal_office",    # used when sending the id in post or put. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
     on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
   )
   name = models.CharField(max_length = 500, blank=True)
@@ -17,7 +17,7 @@ class goalPeg(models.Model):
   weight = models.IntegerField()
   manager = models.ForeignKey(
     PAUser,
-    related_name="goal_manager",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
+    related_name="goal_manager",  # used when sending the id in post or put. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
     on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
   )
   percent_3006 = models.IntegerField()

@@ -3,6 +3,9 @@ from django.http import JsonResponse
 #from rest_framework.response import Response
 #from rest_framework import status
 import json
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import JSONParser
+from rest_framework import status
 
 from .models import goalPeg
 from .forms import goalPegForm
@@ -146,7 +149,7 @@ def delete_multiple_goals(request):
             return JsonResponse({"error": "An error occurred while deleting goals"}, status=400)
     return JsonResponse({"error": "Invalid request method"}, status=400)
 
-
+""" 
 @csrf_exempt
 def update_multiple_goals(request):
     if request.method == 'PUT':
@@ -160,6 +163,9 @@ def update_multiple_goals(request):
                 goal_id = goal_data.get("id") 
                 try:
                     goal = goalPeg.objects.get(pk=goal_id)
+                except goalPeg.DoesNotExist:
+                    # If the goal doesn't exist, create a new one
+                    goal = goalPeg()
 
                     # Update the fields of the goal based on the incoming data
                     # Example: assuming 'name' and 'description' can be updated
@@ -199,6 +205,103 @@ def update_multiple_goals(request):
             logger.error(f"Error: {str(e)}")
             return JsonResponse({"error": "An error occurred while updating goals"}, status=400)
     return JsonResponse({"error": "Invalid request method"}, status=400)
+ """
+""" 
+@csrf_exempt
+def update_multiple_goals(request):
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            logger.info(data)  # Log the request data for debugging
+
+            for goal_data in data:
+                goal_id = goal_data.get("id")
+                try:
+                    goal = goalPeg.objects.get(pk=goal_id)
+                except goalPeg.DoesNotExist:
+                    # If the goal doesn't exist, create a new one
+                    goal = goalPeg()
+                    logger.info('created new goal')  # Log the request data for debugging
+
+                # Update the fields of the goal based on the incoming data
+                goal.name = goal_data.get("name", goal.name)
+                logger.info(goal.name)  # Log the request data for debugging
+                goal.description = goal_data.get("description", goal.description)
+                goal.year = goal_data.get("year", goal.year)
+
+                # get object before assignment
+                officeId = goal_data.get("office", goal.office.id if goal.office else None)
+                logger.info('officeId ' + str(officeId))  # Log the request data for debugging
+                office_object, _ = PAOffice.objects.get_or_create(pk=officeId)
+                goal.office = office_object
+                "" officeId = goal_data.get("office", goal.goal_office.id if goal.goal_office else None)
+                logger.info(officeId)  # Log the request data for debugging
+                office_object, _ = PAOffice.objects.get_or_create(pk=officeId)
+                goal.goal_office = office_object ""
+
+
+
+                # get object before assignment
+                managerId = goal_data.get("manager", goal.manager.id if goal.manager else None)
+                manager_object, _ = PAUser.objects.get_or_create(pk=managerId)
+                goal.manager = manager_object
+
+                goal.weight = goal_data.get("weight", goal.weight)
+                goal.percent_3006 = goal_data.get("percent_3006", goal.percent_3006)
+                goal.weight_3006 = goal_data.get("weight_3006", goal.weight_3006)
+                goal.percent_3112 = goal_data.get("percent_3112", goal.percent_3112)
+                goal.weight_3112 = goal_data.get("weight_3112", goal.weight_3112)
+                goal.type = goal_data.get("type", goal.name)
+
+                # Update the involved people using set, which handles the many-to-many relationship
+                involved_people_data = goal_data.get("involvedPeople", [])
+                goal.involvedPeople.set(involved_people_data)
+
+                goal.save()  # Save the updated or newly created goal
+
+            return JsonResponse({"data": "Goals updated successfully"}, status=200)
+        except Exception as e:
+            logger.error(f"Error: {str(e)}")
+            return JsonResponse({"error": "An error occurred while updating goals"}, status=400)
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+ """
+
+
+
+@csrf_exempt
+@parser_classes([JSONParser])
+def update_multiple_goals(request):
+    if request.method == 'PUT':
+        try:
+            data = JSONParser().parse(request)
+            errors = []
+
+            for goal_data in data:
+                goal_id = goal_data.get("id")
+
+                try:
+                    goal = goalPeg.objects.get(pk=goal_id)
+                except goalPeg.DoesNotExist:
+                    goal = None  # Goal doesn't exist, it will be created
+
+                serializer = goalPegCreateSerializer(instance=goal, data=goal_data)
+
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    errors.append(serializer.errors)
+
+            if errors:
+                return JsonResponse({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+
+            return JsonResponse({"data": "Goals updated successfully"}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    return JsonResponse({"error": "Invalid request method"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @csrf_exempt
