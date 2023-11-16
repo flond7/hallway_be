@@ -112,13 +112,6 @@ def get_person_min_results(request):
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
-
-
-
-
-
-
-
 @csrf_exempt
 def get_po_results(request):
     if request.method == "POST":
@@ -215,124 +208,6 @@ def delete_multiple_goals(request):
             return JsonResponse({"error": "An error occurred while deleting goals"}, status=400)
     return JsonResponse({"error": "Invalid request method"}, status=400)
 
-""" 
-@csrf_exempt
-def update_multiple_goals(request):
-    if request.method == 'PUT':
-        try:
-            data = json.loads(request.body)
-            logger.info(data)  # Log the request data for debugging
-            
-            # goals_data = data.get("goals", [])  # Assuming 'goals' is the key in your JSON data
-
-            for goal_data in data:
-                goal_id = goal_data.get("id") 
-                try:
-                    goal = goalPeg.objects.get(pk=goal_id)
-                except goalPeg.DoesNotExist:
-                    # If the goal doesn't exist, create a new one
-                    goal = goalPeg()
-
-                    # Update the fields of the goal based on the incoming data
-                    # Example: assuming 'name' and 'description' can be updated
-                    goal.name = goal_data.get("name", goal.name)
-                    goal.description = goal_data.get("description", goal.description)
-                    goal.year = goal_data.get("year", goal.year)
-                    
-                    # get object before assignment
-                    officeId = goal_data.get("office", goal.office)
-                    office_object = PAOffice.objects.get(pk=officeId)
-                    goal.office = office_object
-
-                    # get object before assignment
-                    managerId = goal_data.get("manager", goal.manager)
-                    manager_object = PAUser.objects.get(pk=managerId)
-                    goal.manager = manager_object
-                    
-                    goal.weight = goal_data.get("weight", goal.weight)
-                    goal.percent_3006 = goal_data.get("percent_3006", goal.percent_3006)
-                    goal.weight_3006 = goal_data.get("weight_3006", goal.weight_3006)
-                    goal.percent_3112 = goal_data.get("percent_3112", goal.percent_3112)
-                    goal.weight_3112 = goal_data.get("weight_3112", goal.weight_3112)
-                    goal.type = goal_data.get("type", goal.name)
-
-                    #goal.involvedPeople = goal_data.get("involvedPeople", goal.involvedPeople)
-                    involved_people_data = goal_data.get("involvedPeople", [])
-                    goal.involvedPeople.set(involved_people_data)
-  
-                    goal.save()  # Save the updated goal
-                except goalPeg.DoesNotExist:
-                    # Handle case where the goal with that ID doesn't exist
-                    return JsonResponse({"data": "Il record che stai cercando di aggiornare non esiste"}, status=400)
-                    pass
-
-            return JsonResponse({"data": "Goals updated successfully"}, status=200)
-        except Exception as e:
-            logger.error(f"Error: {str(e)}")
-            return JsonResponse({"error": "An error occurred while updating goals"}, status=400)
-    return JsonResponse({"error": "Invalid request method"}, status=400)
- """
-""" 
-@csrf_exempt
-def update_multiple_goals(request):
-    if request.method == 'PUT':
-        try:
-            data = json.loads(request.body)
-            logger.info(data)  # Log the request data for debugging
-
-            for goal_data in data:
-                goal_id = goal_data.get("id")
-                try:
-                    goal = goalPeg.objects.get(pk=goal_id)
-                except goalPeg.DoesNotExist:
-                    # If the goal doesn't exist, create a new one
-                    goal = goalPeg()
-                    logger.info('created new goal')  # Log the request data for debugging
-
-                # Update the fields of the goal based on the incoming data
-                goal.name = goal_data.get("name", goal.name)
-                logger.info(goal.name)  # Log the request data for debugging
-                goal.description = goal_data.get("description", goal.description)
-                goal.year = goal_data.get("year", goal.year)
-
-                # get object before assignment
-                officeId = goal_data.get("office", goal.office.id if goal.office else None)
-                logger.info('officeId ' + str(officeId))  # Log the request data for debugging
-                office_object, _ = PAOffice.objects.get_or_create(pk=officeId)
-                goal.office = office_object
-                "" officeId = goal_data.get("office", goal.goal_office.id if goal.goal_office else None)
-                logger.info(officeId)  # Log the request data for debugging
-                office_object, _ = PAOffice.objects.get_or_create(pk=officeId)
-                goal.goal_office = office_object ""
-
-
-
-                # get object before assignment
-                managerId = goal_data.get("manager", goal.manager.id if goal.manager else None)
-                manager_object, _ = PAUser.objects.get_or_create(pk=managerId)
-                goal.manager = manager_object
-
-                goal.weight = goal_data.get("weight", goal.weight)
-                goal.percent_3006 = goal_data.get("percent_3006", goal.percent_3006)
-                goal.weight_3006 = goal_data.get("weight_3006", goal.weight_3006)
-                goal.percent_3112 = goal_data.get("percent_3112", goal.percent_3112)
-                goal.weight_3112 = goal_data.get("weight_3112", goal.weight_3112)
-                goal.type = goal_data.get("type", goal.name)
-
-                # Update the involved people using set, which handles the many-to-many relationship
-                involved_people_data = goal_data.get("involvedPeople", [])
-                goal.involvedPeople.set(involved_people_data)
-
-                goal.save()  # Save the updated or newly created goal
-
-            return JsonResponse({"data": "Goals updated successfully"}, status=200)
-        except Exception as e:
-            logger.error(f"Error: {str(e)}")
-            return JsonResponse({"error": "An error occurred while updating goals"}, status=400)
-    return JsonResponse({"error": "Invalid request method"}, status=400)
-
- """
-
 @csrf_exempt
 @parser_classes([JSONParser])
 def update_multiple_goals(request):
@@ -379,22 +254,69 @@ def get_goals_numbers(request):
             # Initialize a list to store the goal counts for each office
             data = []
 
+            # Initialize an empty dic to store people's numbers (and count how many people are involved)
+            people_involved = {}
+
             for office in offices:
+                # Get all the goals in for the office
+                goals_for_office = goalPeg.objects.filter(year=year, office=office)
+
+                # get the list divided in ordinary and extraordinary
+                ordinary_list = goals_for_office.filter(type="ordinary")
+                extraordinary_list = goals_for_office.filter(type="extraordinary")
+
                 # Filter goals by year and office
-                ordinary_goals = goalPeg.objects.filter(year=year, office=office.id, type="ordinary").count()
-                extraordinary_goals = goalPeg.objects.filter(year=year, office=office.id, type="extraordinary").count()
+                ordinary_goals = ordinary_list.count()
+                extraordinary_goals = extraordinary_list.count()
+
+                # Get the total weight and the weight at 31/12 so you can calculate the percentage in FE
+                sum_weights = sum(goal.weight for goal in goals_for_office)
+                sum_weights3006 = sum(goal.weight_3006 for goal in goals_for_office)
+                sum_weights3112 = sum(goal.weight_3112 for goal in goals_for_office)
+
+                sum_extra_weights = sum(goal.weight for goal in extraordinary_list)
+                sum_extra_weights3006 = sum(goal.weight_3006 for goal in extraordinary_list)
+                sum_extra_weights3112 = sum(goal.weight_3112 for goal in extraordinary_list)
                 
+                sum_ord_weights = sum(goal.weight for goal in ordinary_list)
+                sum_ord_weights3006 = sum(goal.weight_3006 for goal in ordinary_list)
+                sum_ord_weights3112 = sum(goal.weight_3112 for goal in ordinary_list)
+
+                # Iterate in involvedPeople to add every person involved and count how many times they are involved in a goal
+                for goal in goals_for_office:
+                    for person in goal.involvedPeople.all():
+                        person_id = person.id
+
+                        # Increment the count for this person
+                        people_involved[person_id] = people_involved.get(person_id, 0) + 1
+
                 # Create a nested dictionary for each office
                 office_data = {
                     "ordinary": ordinary_goals,
                     "extraordinary": extraordinary_goals,
-                    "name": office.name
+                    "name": office.name,
+                    "sum_extra_weights": sum_extra_weights,
+                    "sum_extra_weights3006": sum_extra_weights3006,
+                    "sum_extra_weights3112": sum_extra_weights3112,
+                    "sum_ord_weights": sum_ord_weights,
+                    "sum_ord_weights3006": sum_ord_weights3006,
+                    "sum_ord_weights3112": sum_ord_weights3112,
+                    "sum_weights": sum_weights,
+                    "sum_weights3006": sum_weights3006,
+                    "sum_weights3112": sum_weights3112,
                 }
 
                 # Store the counts in the dictionaries
                 data.append(office_data)
 
-            return JsonResponse(data, status=200, safe=False)
+                # create the object to return
+                returnData = {
+                    'data': data,
+                    'people_involved': people_involved
+                }
+
+
+            return JsonResponse(returnData, status=200, safe=False)
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
