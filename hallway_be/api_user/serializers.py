@@ -1,4 +1,4 @@
-from .models import customUser, askUser, PAUser, PAOffice
+from .models import customUser, askUser, PAUser, PAOffice, PACredential
 from rest_framework import serializers
 
 # UserListSerializer 
@@ -32,3 +32,8 @@ class PAOfficeAndPOSerializer(serializers.ModelSerializer):
     class Meta:
         model = PAOffice
         fields = ('id', 'name', 'manager')
+
+class PACredentialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PACredential
+        fields = '__all__'
