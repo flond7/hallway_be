@@ -1,3 +1,6 @@
+PLACEHOLDER_MAIL="@magnificamontagna.comunitafvg.it"
+PLACEHOLDER_LAN_ID="MC."
+
 MAIN_OFFICE_CHOICES = [
   ('o0', '--'),
   ('o1', 'Informatica'),

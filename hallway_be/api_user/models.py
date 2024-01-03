@@ -307,11 +307,11 @@ class PACredential(models.Model):
     on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
   )
   #MAIL
-  mail = models.CharField("Mail personale", max_length=120, default="@comune.aviano.pn.it", blank=True)
+  mail = models.CharField("Mail personale", max_length=120, default=PLACEHOLDER_MAIL, blank=True)
   mailOffice = MultiSelectField(max_length = 100, choices = MAIL_OFFICE_CHOICES, default = 'mo0', blank=False)
   
   #LAN
-  lan = models.CharField("ID personale", max_length=120, default="A516-", blank=True)
+  lan = models.CharField("ID personale", max_length=120, default=PLACEHOLDER_LAN_ID, blank=True)
   lanOffice = MultiSelectField(max_length = 100, choices = LAN_OFFICE_CHOICES, default = 'mo0', blank=True)
   lanRole = models.CharField("Ruolo in LAN", max_length = 2, choices = LAN_ROLES_CHOICES, default = 'l1', blank=True)
   lanNote = models.CharField("Note per lan", max_length = 150, default='', blank=True)
