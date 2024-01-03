@@ -20,6 +20,10 @@ from django.core import serializers
 # USER ASK
 from django.contrib.auth import get_user_model
 
+# LOGGING
+import logging
+logger = logging.getLogger(__name__)
+
 #MAIL
 from django.core.mail import send_mail
 from django.conf import settings
@@ -35,7 +39,7 @@ from .modelsConstants import *
 from .models import customUser, askUser, PAUser, PAOffice, PACredential
 from .forms import customUserForm, askUserForm
 from .filters import customUserFilter
-from .serializers import UserListSerializer, PAUserPEGSerializer, PAOfficeSerializer, PAOfficeAndPOSerializer
+from .serializers import UserListSerializer, PAUserPEGSerializer, PAOfficeSerializer, PAOfficeAndPOSerializer, PACredentialSerializer
 
 # CORS
 from django.views.decorators.csrf import csrf_exempt
@@ -465,12 +469,10 @@ def get_pacredential_user(request):
         try:
             data = json.loads(request.body)
             idPerson = data['id']
-            credentialList = cre
-            goalList = goalPeg.objects.filter(
-                involvedPeople__id=idPerson,
-                year=year
+            credentialList = PACredential.objects.filter(
+                user__id=idPerson,
             )
-            serializer = goalPegSerializer(goalList, many=True)
+            serializer = PACredentialSerializer(credentialList, many=True)
             return JsonResponse({"data": serializer.data}, status=200)
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
