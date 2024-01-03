@@ -29,6 +29,7 @@ DEFAULT_LAN_ID = 1
 
 """
 
+
 class officeMail(models.Model):
   mail = models.CharField(max_length = 4, choices = MAIL_OFFICE_CHOICES, default = 'mo0', blank=False)
 
@@ -257,7 +258,10 @@ class askUser(models.Model):
 
 
 
+"""
+  PAUser is the main user with 
 
+"""
 
 
 
@@ -272,7 +276,6 @@ class PAOffice(models.Model):
 
   def __str__(self):
     return self.name
-
 
 class PAUser(models.Model):
   name = models.CharField("Nome", max_length=100, blank=True, default='')
@@ -295,3 +298,276 @@ class PAUser(models.Model):
 
   def __str__(self):
     return self.name + ' ' + self.surname
+
+
+class PACredentials(models.Model):
+  user = models.ForeignKey(
+    PAUser,
+    related_name="pacredentials_user",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
+    on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
+  )
+  #MAIL
+  mail = models.CharField("Mail personale", max_length=120, default="@comune.aviano.pn.it", blank=True)
+  mailOffice = MultiSelectField(max_length = 100, choices = MAIL_OFFICE_CHOICES, default = 'mo0', blank=False)
+  
+  #LAN
+  lan = models.CharField("ID personale", max_length=120, default="A516-", blank=True)
+  lanOffice = MultiSelectField(max_length = 100, choices = LAN_OFFICE_CHOICES, default = 'mo0', blank=True)
+  lanRole = models.CharField("Ruolo in LAN", max_length = 2, choices = LAN_ROLES_CHOICES, default = 'l1', blank=True)
+  lanNote = models.CharField("Note per lan", max_length = 150, default='', blank=True)
+  
+  #ADWEB
+  adwebOffice = MultiSelectField(max_length = 100, choices = ADWEB_OFFICE_CHOICES, default = 'mo0', blank=False)
+  adwebRole = models.CharField("Ruolo in adweb", max_length = 4, choices = ADWEB_ROLES_CHOICES, default = 'a0', blank=True)
+  adwebNote = models.CharField("Note per adweb", max_length = 150, default='', blank=True)
+    
+  #ASCOT
+  ascotOffice = MultiSelectField("Uffici ascot", max_length = 100, choices = ASCOT_OFFICE_CHOICES, default = 'a0', blank=False)
+  ascotRole = models.CharField("Ruolo ascot", max_length = 4, choices = ASCOT_ROLES_CHOICES, default = 'a0', blank=False)
+  ascotNote = models.CharField("Note per ascot", max_length = 150, default='', blank=True)
+
+  #SDI
+  sdiOffice = MultiSelectField("Ruoli in SDI", max_length = 100, choices = SDI_OFFICE_CHOICES, default = 'sdi0', blank=False)
+  sdiRole = MultiSelectField("Ruoli in SDI", max_length = 100, choices = SDI_ROLES_CHOICES, default = 'sdi0', blank=False)
+  sdiNote = models.CharField("Note per SDI", max_length = 150, default='', blank=True)
+
+  #GIFRA - ITERATTI
+  gifra = models.CharField("ID gifra", max_length=120, blank=True, default="")
+  gifraOffice = MultiSelectField("Uffici gifra", max_length = 100, choices = GIFRA_OFFICE_CHOICES, default = 'i0', blank=False)
+  gifraRole = models.CharField(max_length = 2, choices = GIFRA_ROLES_CHOICES, default = 'i0', blank=False)
+  gifraNote = models.CharField("Note per gifra", max_length = 150, default='', blank=True)
+
+  #BOXAPPS
+  boxAppsRole = models.CharField(max_length = 4, choices = BOXAPP_ROLES_CHOICES, default = 'b1', blank=False)
+
+  #MASTERDATA
+  masterDataRole = models.CharField(max_length = 4, choices = MASTERDATA_ROLES_CHOICES, default = 'm1', blank=False)
+
+  #WEBSITE
+  websiteRole = models.CharField(max_length = 2, choices = WEBSITE_ROLES_CHOICES, default = 'w0', blank=False)
+
+  #CRM
+  crmRole = models.CharField(max_length = 2, choices = CRM_ROLES_CHOICES, default = 'c0', blank=False)
+
+  #AVCP
+  avcpRole = models.CharField(max_length = 2, choices = AVCP_ROLES_CHOICES, default = 'a0', blank=False)
+
+  #FVG pay
+  fvgPayRole = models.CharField(max_length = 2, choices = FVGPAY_ROLES_CHOICES, default = 's0', blank=False)
+
+  #MEPA
+  mepaRole = models.CharField(max_length = 4, choices = MEPA_ROLES_CHOICES, default = 'm0', blank=False)
+
+  #AGENZIA DELLE ENTRATE
+  agEntrRole = models.CharField(max_length = 4, choices = AGENTR_ROLES_CHOICES, default = 'a0', blank=False)
+
+  #SUE
+  sueRole = models.CharField(max_length = 2, choices = SUE_ROLES_CHOICES, default = 's0', blank=False)
+
+  #SUAP
+  suapRole = models.CharField(max_length = 2, choices = SUAP_ROLES_CHOICES, default = 's0', blank=False)
+
+  #SERVIZI SCOLASTICI - Portale Kpax
+  servScolRole = models.CharField(max_length = 4, choices = SERVSCOL_ROLES_CHOICES, default = 'ss0', blank=False)
+
+  #ALBO PRETORIO
+  alboPretRole = models.CharField(max_length = 4, choices = ALBOPRET_ROLES_CHOICES, default = 'ap0', blank=False)
+
+  #AMMINISTRAZIONE TRASPARENTE
+  ammTraspRole = models.CharField(max_length = 4, choices = AMMTRASP_ROLES_CHOICES, default = 'at0', blank=False)
+
+  note = models.TextField(default="", blank=True)
+  employed = models.BooleanField(default=True)
+  active = models.BooleanField(default=True)
+
+  #DISATTIVAZIONI
+  mailDeleted = models.BooleanField("Mail disattivata", default=False)
+  lanDeleted = models.BooleanField("Lan disattivata", default=False)
+  adwebDeleted = models.BooleanField("Adweb disattivato", default=False)
+  ascotDeleted = models.BooleanField("Ascot disattivato", default=False)
+  sdiDeleted = models.BooleanField("SDI disattivato", default=False)
+  iterattiDeleted = models.BooleanField("Iteratti disattivato", default=False)
+  boxAppsDeleted = models.BooleanField("Boxapp disattivato", default=False)
+  websiteDeleted = models.BooleanField("Sito disattivato", default=False)
+  crmDeleted = models.BooleanField("CRM disattivato", default=False)
+  avcpDeleted = models.BooleanField("AVCP disattivato", default=False)
+  servScuolDeleted = models.BooleanField("Servizi scolastici disattivato", default=False)
+  alboPretDeleted = models.BooleanField("Albo pretorio disattivato", default=False)
+  masterdataDeleted = models.BooleanField("Masterdata eliminato", default=False)
+
+  class Meta:
+    ordering = []
+
+  def __str__(self):
+    return self
+
+
+
+""" 
+class CredentialsMAIL(models.Model):
+  user = models.ForeignKey(
+    PAUser,
+    related_name="credentialMail_user",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
+    on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
+  )
+  mail = models.CharField("Mail personale", max_length=120, default="@comune.aviano.pn.it", blank=True)
+  mailOffice = MultiSelectField(max_length = 100, choices = MAIL_OFFICE_CHOICES, default = 'mo0', blank=False)
+  
+  class Meta:
+    ordering = []
+
+  def __str__(self):
+    return self.mail
+
+class CredentialsLAN(models.Model):
+  user = models.ForeignKey(
+    PAUser,
+    related_name="credentialLAN_user",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
+    on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
+  )
+  lan = models.CharField("ID personale", max_length=120, default="MC.", blank=True)
+  lanOffice = MultiSelectField(max_length = 100, choices = LAN_OFFICE_CHOICES, default = 'mo0', blank=True)
+  lanRole = models.CharField("Ruolo in LAN", max_length = 2, choices = LAN_ROLES_CHOICES, default = 'l1', blank=True)
+  lanNote = models.CharField("Note per lan", max_length = 150, default='', blank=True)
+
+  class Meta:
+    ordering = []
+
+  def __str__(self):
+    return self.lanRole
+
+class CredentialsADWEB(models.Model):
+  user = models.ForeignKey(
+    PAUser,
+    related_name="credentialAdweb_user",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
+    on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
+  )
+  adwebOffice = MultiSelectField(max_length = 100, choices = ADWEB_OFFICE_CHOICES, default = 'mo0', blank=False)
+  adwebRole = models.CharField("Ruolo in adweb", max_length = 4, choices = ADWEB_ROLES_CHOICES, default = 'a0', blank=True)
+  adwebNote = models.CharField("Note per adweb", max_length = 150, default='', blank=True)
+
+  class Meta:
+    ordering = []
+
+  def __str__(self):
+    return self
+    
+class CredentialsASCOT(models.Model):
+  user = models.ForeignKey(
+    PAUser,
+    related_name="credentialAscot_user",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
+    on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
+  )
+  ascotOffice = MultiSelectField("Uffici ascot", max_length = 100, choices = ASCOT_OFFICE_CHOICES, default = 'a0', blank=False)
+  ascotRole = models.CharField("Ruolo ascot", max_length = 4, choices = ASCOT_ROLES_CHOICES, default = 'a0', blank=False)
+  ascotNote = models.CharField("Note per ascot", max_length = 150, default='', blank=True)
+
+  class Meta:
+    ordering = []
+
+  def __str__(self):
+    return self
+
+class CredentialsSDI(models.Model):
+  user = models.ForeignKey(
+    PAUser,
+    related_name="credentialSdi_user",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
+    on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
+  )
+  sdiOffice = MultiSelectField("Ruoli in SDI", max_length = 100, choices = SDI_OFFICE_CHOICES, default = 'sdi0', blank=False)
+  sdiRole = MultiSelectField("Ruoli in SDI", max_length = 100, choices = SDI_ROLES_CHOICES, default = 'sdi0', blank=False)
+  sdiNote = models.CharField("Note per SDI", max_length = 150, default='', blank=True)
+
+  class Meta:
+    ordering = []
+
+  def __str__(self):
+    return self
+
+class CredentialsGIFRA(models.Model):
+  user = models.ForeignKey(
+    PAUser,
+    related_name="credentialGifra_user",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
+    on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
+  )
+  gifra = models.CharField("ID iteratti", max_length=120, blank=True, default="")
+  gifraOffice = MultiSelectField("Uffici iteratti", max_length = 100, choices = GIFRA_OFFICE_CHOICES, default = 'i0', blank=False)
+  gifraRole = models.CharField(max_length = 2, choices = GIFRA_ROLES_CHOICES, default = 'i0', blank=False)
+  gifraNote = models.CharField("Note per iteratti", max_length = 150, default='', blank=True)
+
+  class Meta:
+    ordering = []
+
+  def __str__(self):
+    return self
+  
+class CredentialsOTHERS(models.Model):
+  user = models.ForeignKey(
+    PAUser,
+    related_name="credentiaOthers_user",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
+    on_delete=models.PROTECT,      # prevents from deleting the PAUser linked here
+  )
+  #BOXAPPS
+  boxAppsRole = models.CharField(max_length = 4, choices = BOXAPP_ROLES_CHOICES, default = 'b1', blank=False)
+
+  #MASTERDATA
+  masterDataRole = models.CharField(max_length = 4, choices = MASTERDATA_ROLES_CHOICES, default = 'm1', blank=False)
+
+  #WEBSITE
+  websiteRole = models.CharField(max_length = 2, choices = WEBSITE_ROLES_CHOICES, default = 'w0', blank=False)
+
+  #CRM
+  crmRole = models.CharField(max_length = 2, choices = CRM_ROLES_CHOICES, default = 'c0', blank=False)
+
+  #AVCP
+  avcpRole = models.CharField(max_length = 2, choices = AVCP_ROLES_CHOICES, default = 'a0', blank=False)
+
+  #FVG pay
+  fvgPayRole = models.CharField(max_length = 2, choices = FVGPAY_ROLES_CHOICES, default = 's0', blank=False)
+
+  #MEPA
+  mepaRole = models.CharField(max_length = 4, choices = MEPA_ROLES_CHOICES, default = 'm0', blank=False)
+
+  #AGENZIA DELLE ENTRATE
+  agEntrRole = models.CharField(max_length = 4, choices = AGENTR_ROLES_CHOICES, default = 'a0', blank=False)
+
+  #SUE
+  sueRole = models.CharField(max_length = 2, choices = SUE_ROLES_CHOICES, default = 's0', blank=False)
+
+  #SUAP
+  suapRole = models.CharField(max_length = 2, choices = SUAP_ROLES_CHOICES, default = 's0', blank=False)
+
+  #SERVIZI SCOLASTICI - Portale Kpax
+  servScolRole = models.CharField(max_length = 4, choices = SERVSCOL_ROLES_CHOICES, default = 'ss0', blank=False)
+
+  #ALBO PRETORIO
+  alboPretRole = models.CharField(max_length = 4, choices = ALBOPRET_ROLES_CHOICES, default = 'ap0', blank=False)
+
+  #AMMINISTRAZIONE TRASPARENTE
+  ammTraspRole = models.CharField(max_length = 4, choices = AMMTRASP_ROLES_CHOICES, default = 'at0', blank=False)
+
+  note = models.TextField(default="", blank=True)
+  employed = models.BooleanField(default=True)
+  active = models.BooleanField(default=True)
+
+  #DISATTIVAZIONI
+  mailDeleted = models.BooleanField("Mail disattivata", default=False)
+  lanDeleted = models.BooleanField("Lan disattivata", default=False)
+  adwebDeleted = models.BooleanField("Adweb disattivato", default=False)
+  ascotDeleted = models.BooleanField("Ascot disattivato", default=False)
+  sdiDeleted = models.BooleanField("SDI disattivato", default=False)
+  iterattiDeleted = models.BooleanField("Iteratti disattivato", default=False)
+  boxAppsDeleted = models.BooleanField("Boxapp disattivato", default=False)
+  websiteDeleted = models.BooleanField("Sito disattivato", default=False)
+  crmDeleted = models.BooleanField("CRM disattivato", default=False)
+  avcpDeleted = models.BooleanField("AVCP disattivato", default=False)
+  servScuolDeleted = models.BooleanField("Servizi scolastici disattivato", default=False)
+  alboPretDeleted = models.BooleanField("Albo pretorio disattivato", default=False)
+  masterdataDeleted = models.BooleanField("Masterdata eliminato", default=False)
+
+  class Meta:
+    ordering = []
+
+  def __str__(self):
+    return self
+ """
