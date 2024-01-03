@@ -6,6 +6,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from django.http import JsonResponse
+import json
+
 from django import template
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
@@ -29,10 +32,13 @@ from django.contrib import messages
 # MY VARS
 from .constants import MY_CONST
 from .modelsConstants import *
-from .models import customUser, askUser, PAUser, PAOffice
+from .models import customUser, askUser, PAUser, PAOffice, PACredential
 from .forms import customUserForm, askUserForm
 from .filters import customUserFilter
 from .serializers import UserListSerializer, PAUserPEGSerializer, PAOfficeSerializer, PAOfficeAndPOSerializer
+
+# CORS
+from django.views.decorators.csrf import csrf_exempt
 
 
 generic_context = {
@@ -449,3 +455,23 @@ def paoffice_and_po_list(request):
     serializer = PAOfficeAndPOSerializer(PAOfficeList, many=True)
     data = {'data': serializer.data, 'status': 201}
   return JsonResponse(data, status=201)
+
+
+
+
+@csrf_exempt
+def get_pacredential_user(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            idPerson = data['id']
+            credentialList = cre
+            goalList = goalPeg.objects.filter(
+                involvedPeople__id=idPerson,
+                year=year
+            )
+            serializer = goalPegSerializer(goalList, many=True)
+            return JsonResponse({"data": serializer.data}, status=200)
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error: {e}")
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
