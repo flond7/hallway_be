@@ -29,7 +29,6 @@ urlpatterns = [
   path('user_constants_list', views.user_constants_list, name="user_constants_list"),
   path('paoffice_list', views.paoffice_list, name="paoffice_list"),
   path('paoffice_and_po_list', views.paoffice_and_po_list, name="paoffice_and_po_list"),
-
   
   path('user_pacredential', views.user_pacredential, name="user_pacredential"),
  ] 

@@ -477,3 +477,4 @@ def user_pacredential(request):
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
+    
