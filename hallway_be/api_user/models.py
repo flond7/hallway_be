@@ -300,7 +300,7 @@ class PAUser(models.Model):
     return self.name + ' ' + self.surname
 
 
-class PACredentials(models.Model):
+class PACredential(models.Model):
   user = models.ForeignKey(
     PAUser,
     related_name="pacredentials_user",  # name that identifies the relationship. Django creates that in aut mode with the model name and _set so if you have multiple foreignKeys or ManyToMany it's better to custom name them to avoid conflicts
