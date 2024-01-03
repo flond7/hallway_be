@@ -464,7 +464,7 @@ def paoffice_and_po_list(request):
 
 
 @csrf_exempt
-def get_pacredential_user(request):
+def get_user_pacredential(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
