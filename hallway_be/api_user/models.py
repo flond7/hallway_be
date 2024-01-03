@@ -399,7 +399,7 @@ class PACredential(models.Model):
     ordering = []
 
   def __str__(self):
-    return self
+    return self.lan
 
 
 
