@@ -61,6 +61,15 @@ ADWEB_OFFICE_CHOICES = [
   ('ao7', 'Servizio gestione territorio, ambiente, lavori pubblici e patrimonio'),
   ('ao8', 'Servizio programmazione, sciluppo territoriale e suap'),
 ]
+GIFRA_OFFICE_CHOICES = [
+  ('i0', '--'),
+  ('i44', 'POLP  - PO Lavori pubblici'),
+]
+GIFRA_ROLES_CHOICES = [
+  ('i0', '--'),
+  ('i1', 'Utente'),
+  ('i2', 'Amministratore'),
+]
 ITERATTI_OFFICE_CHOICES = [
   ('i0', '--'),
   ('i44', 'POLP  - PO Lavori pubblici'),
