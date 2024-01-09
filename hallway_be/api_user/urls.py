@@ -31,4 +31,5 @@ urlpatterns = [
   path('paoffice_and_po_list', views.paoffice_and_po_list, name="paoffice_and_po_list"),
   
   path('user_pacredential', views.user_pacredential, name="user_pacredential"),
+  path('user_list_pacredential', views.user_list_pacredential, name="user_list_pacredential"),
  ] 

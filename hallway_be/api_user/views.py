@@ -477,4 +477,31 @@ def user_pacredential(request):
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
-    
+
+@csrf_exempt
+def user_list_pacredential(request):
+    if request.method == "GET":
+        PACredentialList = PACredential.objects.all()
+  
+        # Define the conditions you want to check
+        # the offices are array so you check if the value connected to the empty string '--' is in the array. 
+        # If it is then that credential has not been assigned
+        checked_credentials = [
+            {
+                'user': PAUserPEGSerializer(cred.user).data,
+                'lanAssigned': 'l0' not in cred.adwebOffice,
+                'mailAssigned': 'm0' not in cred.mailOffice,
+                'adwebAssigned': 'ao0' not in cred.adwebOffice,
+                'ascotAssigned': 'a0' not in cred.adwebOffice,
+                'gifraAssigned': 'g0' not in cred.adwebOffice,
+                'websiteAssigned': False if cred.websiteRole == 'c0' else True,
+                'voipAssigned': False if cred.voipRole == 'v0' else True,
+                'crmAssigned': False if cred.crmRole == 'c0' else True,
+                # Add more checks here as needed
+            }
+            for cred in PACredentialList
+        ]
+
+        data = {'data': checked_credentials, 'status': 201}
+
+    return JsonResponse(data, status=201)
