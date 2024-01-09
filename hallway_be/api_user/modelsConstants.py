@@ -165,6 +165,11 @@ BOXAPP_ROLES_CHOICES = [
   ('b1', 'Utente'),
   ('b2', 'Amministratore'),
 ]
+VOIP_ROLES_CHOICES = [
+  ('v0', '--'),
+  ('v1', 'Utente'),
+  ('v2', 'Amministratore'),
+]
 MASTERDATA_ROLES_CHOICES = [
   ('m0', '--'),
   ('m1', 'Voce inserita'),

@@ -338,7 +338,10 @@ class PACredential(models.Model):
   gifraNote = models.CharField("Note per gifra", max_length = 150, default='', blank=True)
 
   #BOXAPPS
-  boxAppsRole = models.CharField(max_length = 4, choices = BOXAPP_ROLES_CHOICES, default = 'b1', blank=False)
+  # boxAppsRole = models.CharField(max_length = 4, choices = BOXAPP_ROLES_CHOICES, default = 'b1', blank=False)
+
+  # VOIP
+  voipRole = models.CharField(max_length = 4, choices = VOIP_ROLES_CHOICES, default = 'm1', blank=False)
 
   #MASTERDATA
   masterDataRole = models.CharField(max_length = 4, choices = MASTERDATA_ROLES_CHOICES, default = 'm1', blank=False)
