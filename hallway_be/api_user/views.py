@@ -494,9 +494,10 @@ def user_list_pacredential(request):
                 'adwebAssigned': 'ao0' not in cred.adwebOffice,
                 'ascotAssigned': 'a0' not in cred.adwebOffice,
                 'gifraAssigned': 'g0' not in cred.adwebOffice,
-                'websiteAssigned': False if cred.websiteRole == 'c0' else True,
+                'websiteAssigned': False if cred.websiteRole == 'w0' else True,
                 'voipAssigned': False if cred.voipRole == 'v0' else True,
                 'crmAssigned': False if cred.crmRole == 'c0' else True,
+                'sdiAssigned': False if cred.sdiRole == 'sdi0' else True,
                 # Add more checks here as needed
             }
             for cred in PACredentialList
