@@ -26,6 +26,7 @@
   python -m venv name-virtual-environment
 - activate the venv
   .\venv\Scripts\activate  (in Windows)
+  source venv/bin/activate (in Linux)
 - install everything
   pip install -r requirements.txt                                                       or
   pip install --proxy=http://proxy-bc-el.regione.fvg.it:801 -r requirements.txt
